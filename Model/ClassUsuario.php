@@ -33,20 +33,23 @@ class ClassUsuario {
     }
 
     // Crear un nuevo usuario
-    public function setUsuario($nombre, $correo, $contrasena, $tipo_usuario = 'cliente') {
+    public function setUsuario($nombre, $correo, $contrasena, $direccion, $telefono, $tipo_usuario = 'cliente') {
         try {
             $hash_pass = password_hash($contrasena, PASSWORD_BCRYPT);
-            $stmt = $this->conn->prepare("INSERT INTO usuarios (nombre, correo, contrasena, tipo_usuario) 
-                                          VALUES (:nombre, :correo, :contrasena, :tipo_usuario)");
+            $stmt = $this->conn->prepare("INSERT INTO usuarios (nombre, correo, contrasena, direccion, telefono, tipo_usuario) 
+                                          VALUES (:nombre, :correo, :contrasena, :direccion, :telefono, :tipo_usuario)");
             $stmt->bindParam(':nombre', $nombre);
             $stmt->bindParam(':correo', $correo);
             $stmt->bindParam(':contrasena', $hash_pass);
+            $stmt->bindParam(':direccion', $direccion);
+            $stmt->bindParam(':telefono', $telefono);
             $stmt->bindParam(':tipo_usuario', $tipo_usuario);
+            
             return $stmt->execute();
         } catch (PDOException $e) {
             return "Error: " . $e->getMessage();
         }
-    }    
+    }      
 
     // Actualizar un usuario
     public function updateUsuario($id, $nombre, $correo, $tipo_usuario) {
