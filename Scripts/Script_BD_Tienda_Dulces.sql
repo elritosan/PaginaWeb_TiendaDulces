@@ -1,6 +1,7 @@
 -- CREACIÓN DE LA BASE DE DATOS
--- CREATE DATABASE bd_tienda_dulces;
--- USE bd_tienda_dulces;
+DROP DATABASE IF EXISTS bd_tienda_dulces;
+CREATE DATABASE bd_tienda_dulces;
+USE bd_tienda_dulces;
 
 -- TABLA DE USUARIOS
 CREATE TABLE usuarios (
