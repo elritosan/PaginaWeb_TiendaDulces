@@ -3,32 +3,26 @@ require_once BASE_PATH . DIRECTORY_SEPARATOR . 'Model' . DIRECTORY_SEPARATOR . '
 
 class ClassMarcaController {
 
-    // Obtener todas las marcas
-    public function getMarcasController() {
+    public function getMarcaController() {
         $marcaModel = new ClassMarca();
-        $marcas = $marcaModel->getMarcas();
-        require_once BASE_PATH . DIRECTORY_SEPARATOR . 'View' . DIRECTORY_SEPARATOR . 'Marca' . DIRECTORY_SEPARATOR . 'ListaMarca.php';
+        return $marcaModel->getMarcas();
     }
 
-    // Obtener una marca por ID
     public function getMarcaByIdController($id) {
         $marcaModel = new ClassMarca();
-        $marca = $marcaModel->getMarcaById($id);
-        require_once BASE_PATH . DIRECTORY_SEPARATOR . 'View' . DIRECTORY_SEPARATOR . 'Marca' . DIRECTORY_SEPARATOR . 'DetalleMarca.php';
+        return $marcaModel->getMarcaById($id);
     }
 
-    // Insertar una nueva marca
     public function setMarcaController() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $nombre = $_POST['nombre'];
 
             $marcaModel = new ClassMarca();
             $marcaModel->setMarca($nombre);
-            echo "Marca insertada con éxito!";
+            echo "<script>window.location.href = 'index.php?entity=Marca&action=listar';</script>";
         }
     }
 
-    // Actualizar una marca existente
     public function updateMarcaController() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id = $_POST['id'];
@@ -36,18 +30,17 @@ class ClassMarcaController {
 
             $marcaModel = new ClassMarca();
             $marcaModel->updateMarca($id, $nombre);
-            echo "Marca actualizada con éxito!";
+            echo "<script>window.location.href = 'index.php?entity=Marca&action=listar';</script>";
         }
     }
 
-    // Eliminar una marca
     public function deleteMarcaController() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
             $id = $_POST['id'];
 
             $marcaModel = new ClassMarca();
             $marcaModel->deleteMarca($id);
-            echo "Marca eliminada con éxito!";
+            echo "<script>window.location.href = 'index.php?entity=Marca&action=listar';</script>";
         }
     }
 }
