@@ -9,65 +9,49 @@ class ClassEntrega {
         $this->conn = $db->getConnection();
     }
 
-    // Obtener todas las entregas
     public function getEntregas() {
-        try {
-            $stmt = $this->conn->prepare("SELECT * FROM entregas");
-            $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            return "Error: " . $e->getMessage();
-        }
+        $query = "SELECT * FROM entregas";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Obtener una entrega por ID
     public function getEntregaById($id) {
-        try {
-            $stmt = $this->conn->prepare("SELECT * FROM entregas WHERE id = :id");
-            $stmt->bindParam(':id', $id);
-            $stmt->execute();
-            return $stmt->fetch(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            return "Error: " . $e->getMessage();
-        }
+        $query = "SELECT * FROM entregas WHERE id = :id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // Registrar una nueva entrega
-    public function setEntrega($id_pedido, $direccion_entrega, $fecha_estimada) {
-        try {
-            $stmt = $this->conn->prepare("INSERT INTO entregas (id_pedido, direccion_entrega, fecha_estimada) 
-                                          VALUES (:id_pedido, :direccion_entrega, :fecha_estimada)");
-            $stmt->bindParam(':id_pedido', $id_pedido);
-            $stmt->bindParam(':direccion_entrega', $direccion_entrega);
-            $stmt->bindParam(':fecha_estimada', $fecha_estimada);
-            return $stmt->execute();
-        } catch (PDOException $e) {
-            return "Error: " . $e->getMessage();
-        }
+    public function setEntrega($id_pedido, $direccion_entrega, $fecha_estimada, $estado) {
+        $query = "INSERT INTO entregas (id_pedido, direccion_entrega, fecha_estimada, estado) 
+                  VALUES (:id_pedido, :direccion_entrega, :fecha_estimada, :estado)";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id_pedido', $id_pedido);
+        $stmt->bindParam(':direccion_entrega', $direccion_entrega);
+        $stmt->bindParam(':fecha_estimada', $fecha_estimada);
+        $stmt->bindParam(':estado', $estado);
+        $stmt->execute();
     }
 
-    // Actualizar el estado de la entrega
-    public function updateEntrega($id, $estado, $fecha_estimada) {
-        try {
-            $stmt = $this->conn->prepare("UPDATE entregas SET estado = :estado, fecha_estimada = :fecha_estimada WHERE id = :id");
-            $stmt->bindParam(':id', $id);
-            $stmt->bindParam(':estado', $estado);
-            $stmt->bindParam(':fecha_estimada', $fecha_estimada);
-            return $stmt->execute();
-        } catch (PDOException $e) {
-            return "Error: " . $e->getMessage();
-        }
+    public function updateEntrega($id, $id_pedido, $direccion_entrega, $fecha_estimada, $estado) {
+        $query = "UPDATE entregas SET id_pedido = :id_pedido, direccion_entrega = :direccion_entrega, 
+                  fecha_estimada = :fecha_estimada, estado = :estado WHERE id = :id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id_pedido', $id_pedido);
+        $stmt->bindParam(':direccion_entrega', $direccion_entrega);
+        $stmt->bindParam(':fecha_estimada', $fecha_estimada);
+        $stmt->bindParam(':estado', $estado);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
     }
 
-    // Eliminar una entrega
     public function deleteEntrega($id) {
-        try {
-            $stmt = $this->conn->prepare("DELETE FROM entregas WHERE id = :id");
-            $stmt->bindParam(':id', $id);
-            return $stmt->execute();
-        } catch (PDOException $e) {
-            return "Error: " . $e->getMessage();
-        }
+        $query = "DELETE FROM entregas WHERE id = :id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
     }
 }
 ?>
