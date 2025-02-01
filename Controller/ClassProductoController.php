@@ -3,16 +3,14 @@ require_once BASE_PATH . DIRECTORY_SEPARATOR . 'Model' . DIRECTORY_SEPARATOR . '
 
 class ClassProductoController {
 
-    public function getProductosController() {
+    public function getProductoController() {
         $productoModel = new ClassProducto();
-        $productos = $productoModel->getProductos();
-        require_once BASE_PATH . DIRECTORY_SEPARATOR . 'View' . DIRECTORY_SEPARATOR . 'Producto' . DIRECTORY_SEPARATOR . 'ListaProducto.php';
+        return $productoModel->getProductos();
     }
 
     public function getProductoByIdController($id) {
         $productoModel = new ClassProducto();
-        $producto = $productoModel->getProductoById($id);
-        require_once BASE_PATH . DIRECTORY_SEPARATOR . 'View' . DIRECTORY_SEPARATOR . 'Producto' . DIRECTORY_SEPARATOR . 'DetalleProducto.php';
+        return $productoModel->getProductoById($id);
     }
 
     public function setProductoController() {
@@ -27,7 +25,7 @@ class ClassProductoController {
 
             $productoModel = new ClassProducto();
             $productoModel->setProducto($nombre, $descripcion, $precio, $id_categoria, $id_marca, $stock, $imagen);
-            echo "Producto insertado con éxito!";
+            echo "<script>window.location.href = 'index.php?entity=Producto&action=listar';</script>";
         }
     }
 
@@ -44,17 +42,17 @@ class ClassProductoController {
 
             $productoModel = new ClassProducto();
             $productoModel->updateProducto($id, $nombre, $descripcion, $precio, $id_categoria, $id_marca, $stock, $imagen);
-            echo "Producto actualizado con éxito!";
+            echo "<script>window.location.href = 'index.php?entity=Producto&action=listar';</script>";
         }
     }
 
     public function deleteProductoController() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
             $id = $_POST['id'];
 
             $productoModel = new ClassProducto();
             $productoModel->deleteProducto($id);
-            echo "Producto eliminado con éxito!";
+            echo "<script>window.location.href = 'index.php?entity=Producto&action=listar';</script>";
         }
     }
 }
