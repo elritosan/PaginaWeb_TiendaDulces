@@ -41,7 +41,6 @@ class ClassUsuarioController {
             }
         }
     
-        require_once BASE_PATH . DIRECTORY_SEPARATOR . 'View' . DIRECTORY_SEPARATOR . 'Usuario' . DIRECTORY_SEPARATOR . 'FormUsuario.php';
     }    
 
     public function updateUsuarioController() {
