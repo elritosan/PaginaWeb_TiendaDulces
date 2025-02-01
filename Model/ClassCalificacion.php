@@ -10,48 +10,48 @@ class ClassCalificacion {
     }
 
     public function getCalificaciones() {
-        try {
-            $stmt = $this->conn->prepare("SELECT * FROM calificaciones");
-            $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            return "Error: " . $e->getMessage();
-        }
+        $query = "SELECT * FROM calificaciones";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getCalificacionById($id) {
-        try {
-            $stmt = $this->conn->prepare("SELECT * FROM calificaciones WHERE id = :id");
-            $stmt->bindParam(':id', $id);
-            $stmt->execute();
-            return $stmt->fetch(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            return "Error: " . $e->getMessage();
-        }
+        $query = "SELECT * FROM calificaciones WHERE id = :id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function setCalificacion($id_usuario, $id_producto, $calificacion, $comentario) {
-        try {
-            $stmt = $this->conn->prepare("INSERT INTO calificaciones (id_usuario, id_producto, calificacion, comentario) 
-                                          VALUES (:id_usuario, :id_producto, :calificacion, :comentario)");
-            $stmt->bindParam(':id_usuario', $id_usuario);
-            $stmt->bindParam(':id_producto', $id_producto);
-            $stmt->bindParam(':calificacion', $calificacion);
-            $stmt->bindParam(':comentario', $comentario);
-            return $stmt->execute();
-        } catch (PDOException $e) {
-            return "Error: " . $e->getMessage();
-        }
+        $query = "INSERT INTO calificaciones (id_usuario, id_producto, calificacion, comentario, fecha) 
+                  VALUES (:id_usuario, :id_producto, :calificacion, :comentario, NOW())";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id_usuario', $id_usuario);
+        $stmt->bindParam(':id_producto', $id_producto);
+        $stmt->bindParam(':calificacion', $calificacion);
+        $stmt->bindParam(':comentario', $comentario);
+        $stmt->execute();
+    }
+
+    public function updateCalificacion($id, $id_usuario, $id_producto, $calificacion, $comentario) {
+        $query = "UPDATE calificaciones SET id_usuario = :id_usuario, id_producto = :id_producto, 
+                  calificacion = :calificacion, comentario = :comentario WHERE id = :id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id_usuario', $id_usuario);
+        $stmt->bindParam(':id_producto', $id_producto);
+        $stmt->bindParam(':calificacion', $calificacion);
+        $stmt->bindParam(':comentario', $comentario);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
     }
 
     public function deleteCalificacion($id) {
-        try {
-            $stmt = $this->conn->prepare("DELETE FROM calificaciones WHERE id = :id");
-            $stmt->bindParam(':id', $id);
-            return $stmt->execute();
-        } catch (PDOException $e) {
-            return "Error: " . $e->getMessage();
-        }
+        $query = "DELETE FROM calificaciones WHERE id = :id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
     }
 }
 ?>
