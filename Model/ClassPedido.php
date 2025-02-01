@@ -10,56 +10,45 @@ class ClassPedido {
     }
 
     public function getPedidos() {
-        try {
-            $stmt = $this->conn->prepare("SELECT * FROM pedidos");
-            $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            return "Error: " . $e->getMessage();
-        }
+        $query = "SELECT * FROM pedidos";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getPedidoById($id) {
-        try {
-            $stmt = $this->conn->prepare("SELECT * FROM pedidos WHERE id = :id");
-            $stmt->bindParam(':id', $id);
-            $stmt->execute();
-            return $stmt->fetch(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            return "Error: " . $e->getMessage();
-        }
+        $query = "SELECT * FROM pedidos WHERE id = :id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function setPedido($id_usuario, $total) {
-        try {
-            $stmt = $this->conn->prepare("INSERT INTO pedidos (id_usuario, total) VALUES (:id_usuario, :total)");
-            $stmt->bindParam(':id_usuario', $id_usuario);
-            $stmt->bindParam(':total', $total);
-            return $stmt->execute();
-        } catch (PDOException $e) {
-            return "Error: " . $e->getMessage();
-        }
+    public function setPedido($id_usuario, $total, $estado) {
+        $query = "INSERT INTO pedidos (id_usuario, total, estado, fecha_pedido) 
+                  VALUES (:id_usuario, :total, :estado, NOW())";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id_usuario', $id_usuario);
+        $stmt->bindParam(':total', $total);
+        $stmt->bindParam(':estado', $estado);
+        $stmt->execute();
     }
 
-    public function updatePedido($id, $estado) {
-        try {
-            $stmt = $this->conn->prepare("UPDATE pedidos SET estado = :estado WHERE id = :id");
-            $stmt->bindParam(':id', $id);
-            $stmt->bindParam(':estado', $estado);
-            return $stmt->execute();
-        } catch (PDOException $e) {
-            return "Error: " . $e->getMessage();
-        }
+    public function updatePedido($id, $id_usuario, $total, $estado) {
+        $query = "UPDATE pedidos SET id_usuario = :id_usuario, total = :total, estado = :estado WHERE id = :id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id_usuario', $id_usuario);
+        $stmt->bindParam(':total', $total);
+        $stmt->bindParam(':estado', $estado);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
     }
 
     public function deletePedido($id) {
-        try {
-            $stmt = $this->conn->prepare("DELETE FROM pedidos WHERE id = :id");
-            $stmt->bindParam(':id', $id);
-            return $stmt->execute();
-        } catch (PDOException $e) {
-            return "Error: " . $e->getMessage();
-        }
+        $query = "DELETE FROM pedidos WHERE id = :id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
     }
 }
 ?>

@@ -3,47 +3,48 @@ require_once BASE_PATH . DIRECTORY_SEPARATOR . 'Model' . DIRECTORY_SEPARATOR . '
 
 class ClassPedidoController {
 
-    public function getPedidosController() {
+    public function getPedidoController() {
         $pedidoModel = new ClassPedido();
-        $pedidos = $pedidoModel->getPedidos();
-        require_once BASE_PATH . DIRECTORY_SEPARATOR . 'View' . DIRECTORY_SEPARATOR . 'Pedido' . DIRECTORY_SEPARATOR . 'ListaPedido.php';
+        return $pedidoModel->getPedidos();
     }
 
     public function getPedidoByIdController($id) {
         $pedidoModel = new ClassPedido();
-        $pedido = $pedidoModel->getPedidoById($id);
-        require_once BASE_PATH . DIRECTORY_SEPARATOR . 'View' . DIRECTORY_SEPARATOR . 'Pedido' . DIRECTORY_SEPARATOR . 'DetallePedido.php';
+        return $pedidoModel->getPedidoById($id);
     }
 
     public function setPedidoController() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id_usuario = $_POST['id_usuario'];
             $total = $_POST['total'];
+            $estado = $_POST['estado'];
 
             $pedidoModel = new ClassPedido();
-            $pedidoModel->setPedido($id_usuario, $total);
-            echo "Pedido registrado con éxito!";
+            $pedidoModel->setPedido($id_usuario, $total, $estado);
+            echo "<script>window.location.href = 'index.php?entity=Pedido&action=listar';</script>";
         }
     }
 
     public function updatePedidoController() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id = $_POST['id'];
+            $id_usuario = $_POST['id_usuario'];
+            $total = $_POST['total'];
             $estado = $_POST['estado'];
 
             $pedidoModel = new ClassPedido();
-            $pedidoModel->updatePedido($id, $estado);
-            echo "Pedido actualizado con éxito!";
+            $pedidoModel->updatePedido($id, $id_usuario, $total, $estado);
+            echo "<script>window.location.href = 'index.php?entity=Pedido&action=listar';</script>";
         }
     }
 
     public function deletePedidoController() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
             $id = $_POST['id'];
 
             $pedidoModel = new ClassPedido();
             $pedidoModel->deletePedido($id);
-            echo "Pedido eliminado con éxito!";
+            echo "<script>window.location.href = 'index.php?entity=Pedido&action=listar';</script>";
         }
     }
 }
