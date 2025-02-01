@@ -3,16 +3,14 @@ require_once BASE_PATH . DIRECTORY_SEPARATOR . 'Model' . DIRECTORY_SEPARATOR . '
 
 class ClassPromocionController {
 
-    public function getPromocionesController() {
+    public function getPromocionController() {
         $promocionModel = new ClassPromocion();
-        $promociones = $promocionModel->getPromociones();
-        require_once BASE_PATH . DIRECTORY_SEPARATOR . 'View' . DIRECTORY_SEPARATOR . 'Promocion' . DIRECTORY_SEPARATOR . 'ListaPromocion.php';
+        return $promocionModel->getPromociones();
     }
 
     public function getPromocionByIdController($id) {
         $promocionModel = new ClassPromocion();
-        $promocion = $promocionModel->getPromocionById($id);
-        require_once BASE_PATH . DIRECTORY_SEPARATOR . 'View' . DIRECTORY_SEPARATOR . 'Promocion' . DIRECTORY_SEPARATOR . 'DetallePromocion.php';
+        return $promocionModel->getPromocionById($id);
     }
 
     public function setPromocionController() {
@@ -24,30 +22,31 @@ class ClassPromocionController {
 
             $promocionModel = new ClassPromocion();
             $promocionModel->setPromocion($id_producto, $descuento, $fecha_inicio, $fecha_fin);
-            echo "Promoción insertada con éxito!";
+            echo "<script>window.location.href = 'index.php?entity=Promocion&action=listar';</script>";
         }
     }
 
     public function updatePromocionController() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id = $_POST['id'];
+            $id_producto = $_POST['id_producto'];
             $descuento = $_POST['descuento'];
             $fecha_inicio = $_POST['fecha_inicio'];
             $fecha_fin = $_POST['fecha_fin'];
 
             $promocionModel = new ClassPromocion();
-            $promocionModel->updatePromocion($id, $descuento, $fecha_inicio, $fecha_fin);
-            echo "Promoción actualizada con éxito!";
+            $promocionModel->updatePromocion($id, $id_producto, $descuento, $fecha_inicio, $fecha_fin);
+            echo "<script>window.location.href = 'index.php?entity=Promocion&action=listar';</script>";
         }
     }
 
     public function deletePromocionController() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
             $id = $_POST['id'];
 
             $promocionModel = new ClassPromocion();
             $promocionModel->deletePromocion($id);
-            echo "Promoción eliminada con éxito!";
+            echo "<script>window.location.href = 'index.php?entity=Promocion&action=listar';</script>";
         }
     }
 }
