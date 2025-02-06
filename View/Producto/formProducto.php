@@ -1,4 +1,13 @@
 <?php
+require_once BASE_PATH . DIRECTORY_SEPARATOR . 'Model' . DIRECTORY_SEPARATOR . 'ClassCategoria.php';
+require_once BASE_PATH . DIRECTORY_SEPARATOR . 'Model' . DIRECTORY_SEPARATOR . 'ClassMarca.php';
+
+$categoriaModel = new ClassCategoria();
+$categorias = $categoriaModel->getCategorias();
+
+$marcaModel = new ClassMarca();
+$marcas = $marcaModel->getMarcas();
+
 $producto = $elemento ?? null;
 $producto = $producto ?? ['id' => '', 'nombre' => '', 'descripcion' => '', 'precio' => '', 'id_categoria' => '', 'id_marca' => '', 'stock' => '', 'imagen' => ''];
 $isEdit = !empty($producto['id']);
@@ -26,11 +35,23 @@ $isEdit = !empty($producto['id']);
     </div>
     <div class="mb-3">
         <label class="form-label">Categoría</label>
-        <input type="text" name="id_categoria" class="form-control" value="<?php echo htmlspecialchars($producto['id_categoria']); ?>" required>
+        <select name="id_categoria" class="form-control" required>
+            <?php foreach ($categorias as $categoria): ?>
+                <option value="<?php echo $categoria['id']; ?>" <?php echo $producto['id_categoria'] == $categoria['id'] ? 'selected' : ''; ?>>
+                    <?php echo htmlspecialchars($categoria['nombre']); ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
     </div>
     <div class="mb-3">
         <label class="form-label">Marca</label>
-        <input type="text" name="id_marca" class="form-control" value="<?php echo htmlspecialchars($producto['id_marca']); ?>" required>
+        <select name="id_marca" class="form-control" required>
+            <?php foreach ($marcas as $marca): ?>
+                <option value="<?php echo $marca['id']; ?>" <?php echo $producto['id_marca'] == $marca['id'] ? 'selected' : ''; ?>>
+                    <?php echo htmlspecialchars($marca['nombre']); ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
     </div>
     <div class="mb-3">
         <label class="form-label">Stock</label>

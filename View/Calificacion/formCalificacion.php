@@ -1,6 +1,14 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+require_once BASE_PATH . DIRECTORY_SEPARATOR . 'Model' . DIRECTORY_SEPARATOR . 'ClassProducto.php';
+
+$productoModel = new ClassProducto();
+$productos = $productoModel->getProductos();
+
 $calificacion = $elemento ?? null;
-$calificacion = $calificacion ?? ['id' => '', 'id_usuario' => '', 'id_producto' => '', 'calificacion' => '', 'comentario' => ''];
+$calificacion = $calificacion ?? ['id' => '', 'id_usuario' => $_SESSION['usuario']['id'] ?? '', 'id_producto' => '', 'calificacion' => '', 'comentario' => ''];
 $isEdit = !empty($calificacion['id']);
 ?>
 
@@ -13,12 +21,19 @@ $isEdit = !empty($calificacion['id']);
     <?php endif; ?>
 
     <div class="mb-3">
-        <label class="form-label">ID Usuario</label>
-        <input type="text" name="id_usuario" class="form-control" value="<?php echo htmlspecialchars($calificacion['id_usuario']); ?>" required>
+        <label class="form-label">Usuario</label>
+        <input type="hidden" name="id_usuario" value="<?php echo htmlspecialchars($calificacion['id_usuario']); ?>">
+        <input type="text" class="form-control" value="<?php echo htmlspecialchars($_SESSION['usuario']['nombre'] ?? ''); ?>" disabled>
     </div>
     <div class="mb-3">
-        <label class="form-label">ID Producto</label>
-        <input type="text" name="id_producto" class="form-control" value="<?php echo htmlspecialchars($calificacion['id_producto']); ?>" required>
+        <label class="form-label">Producto</label>
+        <select name="id_producto" class="form-control" required>
+            <?php foreach ($productos as $producto): ?>
+                <option value="<?php echo $producto['id']; ?>" <?php echo $calificacion['id_producto'] == $producto['id'] ? 'selected' : ''; ?>>
+                    <?php echo htmlspecialchars($producto['nombre']); ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
     </div>
     <div class="mb-3">
         <label class="form-label">Calificación</label>

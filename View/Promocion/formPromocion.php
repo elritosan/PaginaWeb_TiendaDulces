@@ -1,4 +1,9 @@
 <?php
+require_once BASE_PATH . DIRECTORY_SEPARATOR . 'Model' . DIRECTORY_SEPARATOR . 'ClassProducto.php';
+
+$productoModel = new ClassProducto();
+$productos = $productoModel->getProductos();
+
 $promocion = $elemento ?? null;
 $promocion = $promocion ?? ['id' => '', 'id_producto' => '', 'descuento' => '', 'fecha_inicio' => '', 'fecha_fin' => ''];
 $isEdit = !empty($promocion['id']);
@@ -13,8 +18,14 @@ $isEdit = !empty($promocion['id']);
     <?php endif; ?>
 
     <div class="mb-3">
-        <label class="form-label">ID Producto</label>
-        <input type="text" name="id_producto" class="form-control" value="<?php echo htmlspecialchars($promocion['id_producto']); ?>" required>
+        <label class="form-label">Producto</label>
+        <select name="id_producto" class="form-control" required>
+            <?php foreach ($productos as $producto): ?>
+                <option value="<?php echo $producto['id']; ?>" <?php echo $promocion['id_producto'] == $producto['id'] ? 'selected' : ''; ?>>
+                    <?php echo htmlspecialchars($producto['nombre']); ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
     </div>
     <div class="mb-3">
         <label class="form-label">Descuento (%)</label>
