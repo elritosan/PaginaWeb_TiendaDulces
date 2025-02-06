@@ -1,75 +1,69 @@
-- 1. Listado de Usuarios Registrados
-SELECT id, nombre, correo, telefono, tipo_usuario, fecha_registro 
-FROM usuarios 
-ORDER BY fecha_registro DESC;
+1. Reporte de productos más vendidos (por cantidad):
+SELECT p.nombre AS producto, SUM(dp.cantidad) AS total_vendido
+FROM productos p
+JOIN detalles_pedido dp ON p.id = dp.id_producto
+GROUP BY p.id
+ORDER BY total_vendido DESC;
 
+2. Reporte de pedidos por estado:
+SELECT p.estado AS estado_pedido, COUNT(*) AS cantidad
+FROM pedidos p
+GROUP BY p.estado;
 
-- 2. Productos Más Vendidos
-SELECT p.id, p.nombre, SUM(dp.cantidad) AS total_vendido
-FROM detalles_pedido dp
-JOIN productos p ON dp.id_producto = p.id
-GROUP BY p.id, p.nombre
-ORDER BY total_vendido DESC
-LIMIT 10;
-
-- 3. Pedidos por Usuario
-SELECT u.id, u.nombre, COUNT(p.id) AS total_pedidos, SUM(p.total) AS gasto_total
+3. Reporte de ventas por usuario:
+SELECT u.nombre, SUM(p.total) AS total_compras
 FROM pedidos p
 JOIN usuarios u ON p.id_usuario = u.id
-GROUP BY u.id, u.nombre
-ORDER BY gasto_total DESC;
+WHERE p.estado = 'entregado'
+GROUP BY u.id;
 
 
-- 4. Pedidos Pendientes de Envío
-SELECT p.id, u.nombre, p.total, p.estado, p.fecha_pedido
-FROM pedidos p
-JOIN usuarios u ON p.id_usuario = u.id
-WHERE p.estado = 'pendiente'
-ORDER BY p.fecha_pedido ASC;
- 
-- 5. Ingresos Generados por Mes
-SELECT DATE_FORMAT(fecha_pedido, '%Y-%m') AS mes, SUM(total) AS ingresos
-FROM pedidos
-GROUP BY mes
-ORDER BY mes DESC;
-
-
-- 6. Productos en Promoción Activa
-SELECT p.id, p.nombre, p.precio, pr.descuento, 
-       (p.precio - (p.precio * pr.descuento / 100)) AS precio_descuento
+4. Reporte de productos en promoción:
+SELECT p.nombre AS producto, pr.descuento, pr.fecha_inicio, pr.fecha_fin
 FROM promociones pr
 JOIN productos p ON pr.id_producto = p.id
 WHERE CURDATE() BETWEEN pr.fecha_inicio AND pr.fecha_fin;
 
 
-- 8. Calificaciones y Opiniones de Productos
-SELECT p.nombre, c.calificacion, c.comentario, u.nombre AS usuario, c.fecha
+5. Reporte de productos con stock bajo (por debajo de un umbral específico, por ejemplo, 10 unidades):
+SELECT nombre, stock
+FROM productos
+WHERE stock < 10;
+
+
+6. Reporte de calificaciones por producto:
+SELECT p.nombre AS producto, AVG(c.calificacion) AS calificacion_promedio, COUNT(c.id) AS cantidad_calificaciones
 FROM calificaciones c
 JOIN productos p ON c.id_producto = p.id
-JOIN usuarios u ON c.id_usuario = u.id
-ORDER BY c.fecha DESC;
+GROUP BY p.id
+ORDER BY calificacion_promedio DESC;
 
 
-- 9. Usuarios que no Han Realizado Pedidos
-SELECT u.id, u.nombre, u.correo 
-FROM usuarios u
-LEFT JOIN pedidos p ON u.id = p.id_usuario
-WHERE p.id IS NULL;
+7. Reporte de entregas por estado:
+SELECT e.estado AS estado_entrega, COUNT(*) AS cantidad
+FROM entregas e
+GROUP BY e.estado;
 
 
-- 14. Categorías Más Vendidas
-SELECT cat.nombre AS categoria, SUM(dp.cantidad) AS total_vendido
-FROM detalles_pedido dp
-JOIN productos p ON dp.id_producto = p.id
-JOIN categorias cat ON p.id_categoria = cat.id
-GROUP BY cat.id, cat.nombre
-ORDER BY total_vendido DESC;
+8. Reporte de pedidos por fecha de registro:
+SELECT DATE(fecha_pedido) AS fecha, COUNT(*) AS cantidad_pedidos, SUM(total) AS total_ventas
+FROM pedidos
+GROUP BY DATE(fecha_pedido)
+ORDER BY fecha DESC;
 
 
-18. Usuarios que Más Compran
-SELECT u.id, u.nombre, COUNT(p.id) AS total_pedidos, SUM(p.total) AS gasto_total
+9. Reporte de productos más caros:
+SELECT nombre, precio
+FROM productos
+ORDER BY precio DESC
+LIMIT 10;
+
+
+10. Reporte de usuarios con más compras (por total gastado):
+SELECT u.nombre, SUM(p.total) AS total_compras
 FROM pedidos p
 JOIN usuarios u ON p.id_usuario = u.id
-GROUP BY u.id, u.nombre
-ORDER BY gasto_total DESC
+WHERE p.estado = 'entregado'
+GROUP BY u.id
+ORDER BY total_compras DESC
 LIMIT 10;
