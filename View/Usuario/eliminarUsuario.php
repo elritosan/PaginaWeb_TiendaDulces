@@ -1,1 +1,0 @@
-<a href="index.php?entity=Usuario&action=listar" class="btn btn-primary">Volver</a>

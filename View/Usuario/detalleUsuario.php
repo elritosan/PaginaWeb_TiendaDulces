@@ -1,4 +1,6 @@
 <?php
+require_once BASE_PATH . DIRECTORY_SEPARATOR . 'Model' . DIRECTORY_SEPARATOR . 'ClassUsuario.php';
+
 $usuario = $elemento;
 if (!isset($usuario) || empty($usuario)) {
     echo "<p class='text-danger'>Usuario no encontrado.</p>";
@@ -19,6 +21,13 @@ if (!isset($usuario) || empty($usuario)) {
 
 <div class="mt-3">
     <a href="index.php?entity=Usuario&action=editar&id=<?php echo $usuario['id']; ?>" class="btn btn-warning">Editar</a>
-    <a href="index.php?entity=Usuario&action=eliminar&id=<?php echo $usuario['id']; ?>" class="btn btn-danger">Eliminar</a>
+    
+    <form method="POST" action="index.php" style="display:inline;">
+        <input type="hidden" name="entity" value="Usuario">
+        <input type="hidden" name="action" value="eliminar">
+        <input type="hidden" name="id" value="<?php echo htmlspecialchars($usuario['id']); ?>">
+        <button type="submit" class="btn btn-danger">Eliminar</button>
+    </form>
+    
     <a href="index.php?entity=Usuario&action=listar" class="btn btn-secondary">Volver</a>
 </div>

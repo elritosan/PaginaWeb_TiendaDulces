@@ -112,7 +112,6 @@ function createDropdownMenu($entity, $label, $icon) {
             } elseif ($action === 'listar') {
                 $listadoelementos = $controller->{"get" . $entity . "Controller"}();
                 require_once BASE_PATH . DIRECTORY_SEPARATOR . 'View' . DIRECTORY_SEPARATOR . $entity . DIRECTORY_SEPARATOR . 'lista' . $entity . '.php';
-        
             } elseif ($action === 'insertar') {
                 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $controller->{"set" . $entity . "Controller"}();
@@ -131,7 +130,6 @@ function createDropdownMenu($entity, $label, $icon) {
                 require_once BASE_PATH . DIRECTORY_SEPARATOR . 'View' . DIRECTORY_SEPARATOR . $entity . DIRECTORY_SEPARATOR . 'detalle' . $entity . '.php';
             } elseif ($action === 'eliminar' && $id) {
                 $controller->{"delete" . $entity . "Controller"}($id);
-                require_once BASE_PATH . DIRECTORY_SEPARATOR . 'View' . DIRECTORY_SEPARATOR . $entity . DIRECTORY_SEPARATOR . 'eliminar' . $entity . '.php';
             } else {
                 echo "<p class='text-danger'>Acción no válida</p>";
             }
