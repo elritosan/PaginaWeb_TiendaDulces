@@ -15,7 +15,7 @@ if (!isset($usuario) || empty($usuario)) {
     <li class="list-group-item"><strong>Correo:</strong> <?php echo htmlspecialchars($usuario['correo']); ?></li>
     <li class="list-group-item"><strong>Dirección:</strong> <?php echo htmlspecialchars($usuario['direccion']); ?></li>
     <li class="list-group-item"><strong>Teléfono:</strong> <?php echo htmlspecialchars($usuario['telefono']); ?></li>
-    <li class="list-group-item"><strong>Tipo de Usuario:</strong> <?php echo htmlspecialchars($usuario['tipo_usuario']); ?></li>
+    <li class="list-group-item"><strong>Rol:</strong> <?php echo htmlspecialchars($usuario['id_rol']); ?></li>
     <li class="list-group-item"><strong>Fecha de Registro:</strong> <?php echo htmlspecialchars($usuario['fecha_registro']); ?></li>
 </ul>
 

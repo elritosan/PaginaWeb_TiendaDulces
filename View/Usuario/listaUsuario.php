@@ -4,7 +4,7 @@ echo "<a href='index.php?entity=Usuario&action=insertar' class='btn btn-success 
 
 echo "<table class='table table-striped'>";
 echo "<thead><tr>
-        <th>ID</th><th>Nombre</th><th>Correo</th><th>Tipo</th>
+        <th>ID</th><th>Nombre</th><th>Correo</th><th>Rol</th>
         <th>Acciones</th>
       </tr></thead><tbody>";
 
@@ -13,7 +13,7 @@ foreach ($listadoelementos as $usuario) {
     echo "<td>{$usuario['id']}</td>";
     echo "<td>{$usuario['nombre']}</td>";
     echo "<td>{$usuario['correo']}</td>";
-    echo "<td>{$usuario['tipo_usuario']}</td>";
+    echo "<td>{$usuario['id_rol']}</td>";
     echo "<td>
         <a href='index.php?entity=Usuario&action=detalle&id={$usuario['id']}' class='btn btn-info btn-sm'>Ver Detalle</a>
     </td>";

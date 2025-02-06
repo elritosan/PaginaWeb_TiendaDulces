@@ -5,16 +5,12 @@ class ClassUsuarioController {
 
     public function getUsuarioController() {
         $usuarioModel = new ClassUsuario();
-        $usuarios = $usuarioModel->getUsuarios();
-
-        return $usuarios;
+        return $usuarioModel->getUsuarios();
     }
 
     public function getUsuarioByIdController($id) {
         $usuarioModel = new ClassUsuario();
-        $usuario = $usuarioModel->getUsuarioById($id);
-
-        return $usuario;
+        return $usuarioModel->getUsuarioById($id);
     }
 
     public function setUsuarioController() {
@@ -24,10 +20,10 @@ class ClassUsuarioController {
             $contrasena = $_POST['contrasena'] ?? null;
             $direccion = $_POST['direccion'] ?? null;
             $telefono = $_POST['telefono'] ?? null;
-            $tipo_usuario = $_POST['tipo_usuario'] ?? 'cliente';
+            $id_rol = $_POST['id_rol'] ?? null;
     
             $usuarioModel = new ClassUsuario();
-            $usuarioModel->setUsuario($nombre, $correo, $contrasena, $direccion, $telefono, $tipo_usuario);
+            $usuarioModel->setUsuario($nombre, $correo, $contrasena, $direccion, $telefono, $id_rol);
             echo "<script>window.location.href = 'index.php?entity=Usuario&action=listar';</script>";
         }
     }    
@@ -37,10 +33,10 @@ class ClassUsuarioController {
             $id = $_POST['id'];
             $nombre = $_POST['nombre'];
             $correo = $_POST['correo'];
-            $tipo_usuario = $_POST['tipo_usuario'];
+            $id_rol = $_POST['id_rol'];
 
             $usuarioModel = new ClassUsuario();
-            $usuarioModel->updateUsuario($id, $nombre, $correo, $tipo_usuario);
+            $usuarioModel->updateUsuario($id, $nombre, $correo, $id_rol);
             echo "<script>window.location.href = 'index.php?entity=Usuario&action=listar';</script>";
         }
     }
