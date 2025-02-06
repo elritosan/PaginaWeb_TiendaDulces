@@ -29,6 +29,7 @@ $controllers = [
     'Promocion' => 'ClassPromocionController',
     'Calificacion' => 'ClassCalificacionController',
     'Entrega' => 'ClassEntregaController',
+    'Rol' => 'ClassRolController',  // Nuevo
     'Login' => 'ClassIniciarSesionController'  // Nuevo
 ];
 
@@ -66,6 +67,7 @@ function createDropdownMenu($entity, $label, $icon) {
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav">
                     <?php
+                    echo createDropdownMenu('Rol', 'Roles', 'fas fa-user');
                     echo createDropdownMenu('Usuario', 'Usuarios', 'fas fa-user');
                     echo createDropdownMenu('Categoria', 'Categorías', 'fas fa-list');
                     echo createDropdownMenu('Marca', 'Marcas', 'fas fa-tags');
