@@ -9,22 +9,21 @@ class ClassIniciarSesion {
         $this->conn = $db->getConnection();
     }
 
-    public function verificarCredenciales($email, $password) {
+    public function validarCredenciales($correo, $contrasena) {
         try {
-            $stmt = $this->conn->prepare("SELECT * FROM usuarios WHERE correo = :email");
-            $stmt->bindParam(':email', $email);
+            $stmt = $this->conn->prepare("SELECT * FROM usuarios WHERE correo = :correo");
+            $stmt->bindParam(':correo', $correo);
             $stmt->execute();
             $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            echo "HOLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA".$usuario['contrasena'];
-            
-
-            if ($usuario && password_verify($password, $usuario['contrasena'])) {
-                return $usuario; // Devuelve los datos del usuario en lugar de un mensaje
+            if ($usuario && password_verify($contrasena, $usuario['contrasena'])) {
+                return $usuario; // Retorna los datos del usuario
+            } else {
+                return null; // Credenciales incorrectas
             }
-            return null;
         } catch (PDOException $e) {
             return null;
         }
     }
 }
+?>

@@ -1,22 +1,22 @@
 <?php
+// Iniciar sesión
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 // Definir la ruta base para evitar concatenaciones incorrectas
 define('BASE_PATH', __DIR__);
 
 // Obtener la entidad y la acción desde la URL (por defecto 'Usuario' y 'listar')
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    echo "Por Metodo POST";
     $entity = $_POST['entity'] ?? null;
     $action = $_POST['action'] ?? null;
     $id = $_POST['id'] ?? null;
 } else {
-    echo "Por Metodo GET";
     $entity = $_GET['entity'] ?? null;
     $action = $_GET['action'] ?? null;
     $id = $_GET['id'] ?? null;
 }
-
-echo "Entidad: ".$entity. " Acción: ".$action. " Id: ".$id;
-
 
 // Mapeo de entidades con sus controladores correspondientes
 $controllers = [
@@ -28,14 +28,15 @@ $controllers = [
     'DetallePedido' => 'ClassDetallePedidoController',
     'Promocion' => 'ClassPromocionController',
     'Calificacion' => 'ClassCalificacionController',
-    'Entrega' => 'ClassEntregaController'
+    'Entrega' => 'ClassEntregaController',
+    'Login' => 'ClassIniciarSesionController'  // Nuevo
 ];
 
 // Función para generar el menú
 function createDropdownMenu($entity, $label, $icon) {
     return "
     <li class='nav-item dropdown'>
-        <a class='nav-link' href='index.php?entity=$entity&action=listar' id='navbarDropdown-$entity' role='button' aria-expanded='false'>
+        <a class='nav-link' href='index.php?entity=$entity&action=listar'>
             <i class='$icon'></i> $label
         </a>
     </li>";
@@ -75,6 +76,18 @@ function createDropdownMenu($entity, $label, $icon) {
                     echo createDropdownMenu('Calificacion', 'Calificaciones', 'fas fa-star');
                     echo createDropdownMenu('Entrega', 'Entregas', 'fas fa-truck');
                     ?>
+                    <!-- Opción de Login/Logout -->
+                    <li class="nav-item">
+                        <?php if (isset($_SESSION['usuario'])): ?>
+                            <a class="nav-link text-danger" href="index.php?entity=Login&action=logout">
+                                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión (<?php echo $_SESSION['usuario']['nombre']; ?>)
+                            </a>
+                        <?php else: ?>
+                            <a class="nav-link text-success" href="index.php?entity=Login&action=login">
+                                <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+                            </a>
+                        <?php endif; ?>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -86,12 +99,20 @@ function createDropdownMenu($entity, $label, $icon) {
         if (array_key_exists($entity, $controllers)) {
             require_once BASE_PATH . DIRECTORY_SEPARATOR . 'Controller' . DIRECTORY_SEPARATOR . $controllers[$entity] . '.php';
             $controller = new $controllers[$entity]();
-
-            // Determinar la acción y llamar el método correspondiente
-            if ($action === 'listar') {
+        
+            if ($entity === 'Login') {
+                if ($action === 'login') {
+                    require_once BASE_PATH . DIRECTORY_SEPARATOR . 'View' . DIRECTORY_SEPARATOR . 'Login.php';
+                } elseif ($action === 'procesarLogin' && $_SERVER["REQUEST_METHOD"] == "POST") {
+                    $controller = new ClassIniciarSesionController();
+                    $controller->iniciarSesion($_POST['correo'], $_POST['contrasena']);
+                } elseif ($action === 'logout') {
+                    $controller->cerrarSesion();
+                } 
+            } elseif ($action === 'listar') {
                 $listadoelementos = $controller->{"get" . $entity . "Controller"}();
                 require_once BASE_PATH . DIRECTORY_SEPARATOR . 'View' . DIRECTORY_SEPARATOR . $entity . DIRECTORY_SEPARATOR . 'lista' . $entity . '.php';
-                
+        
             } elseif ($action === 'insertar') {
                 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $controller->{"set" . $entity . "Controller"}();
@@ -116,7 +137,7 @@ function createDropdownMenu($entity, $label, $icon) {
             }
         } else {
             echo "<p class='text-danger'>Entidad no válida</p>";
-        }
+        }           
         ?>
     </div>
 
