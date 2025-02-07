@@ -29,8 +29,9 @@ $controllers = [
     'Promocion' => 'ClassPromocionController',
     'Calificacion' => 'ClassCalificacionController',
     'Entrega' => 'ClassEntregaController',
-    'Rol' => 'ClassRolController',  // Nuevo
-    'Login' => 'ClassIniciarSesionController'  // Nuevo
+    'Rol' => 'ClassRolController',
+    'Login' => 'ClassIniciarSesionController',
+    'Reporte' => 'ClassReporteController' // Nuevo
 ];
 
 // Función para generar el menú
@@ -56,7 +57,6 @@ function createDropdownMenu($entity, $label, $icon) {
     <script src="https://kit.fontawesome.com/49ed2ef561.js" crossorigin="anonymous"></script>
 </head>
 <body>
-
     <!-- Barra de navegación -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container-fluid">
@@ -77,6 +77,7 @@ function createDropdownMenu($entity, $label, $icon) {
                     echo createDropdownMenu('Promocion', 'Promociones', 'fas fa-percent');
                     echo createDropdownMenu('Calificacion', 'Calificaciones', 'fas fa-star');
                     echo createDropdownMenu('Entrega', 'Entregas', 'fas fa-truck');
+                    echo createDropdownMenu('Reporte', 'Reportes', 'fas fa-chart-bar'); // Nuevo
                     ?>
                     <!-- Opción de Login/Logout -->
                     <li class="nav-item">
@@ -97,16 +98,16 @@ function createDropdownMenu($entity, $label, $icon) {
 
     <div class="container mt-4">
         <?php
-        // Verificar si la entidad existe en los controladores
         if (array_key_exists($entity, $controllers)) {
             require_once BASE_PATH . DIRECTORY_SEPARATOR . 'Controller' . DIRECTORY_SEPARATOR . $controllers[$entity] . '.php';
             $controller = new $controllers[$entity]();
-        
-            if ($entity === 'Login') {
+            
+            if ($entity === 'Reporte' && $action === 'listar') {
+                require_once BASE_PATH . DIRECTORY_SEPARATOR . 'View' . DIRECTORY_SEPARATOR . 'Reporte' . DIRECTORY_SEPARATOR . 'listaReporte.php';
+            } elseif ($entity === 'Login') {
                 if ($action === 'login') {
                     require_once BASE_PATH . DIRECTORY_SEPARATOR . 'View' . DIRECTORY_SEPARATOR . 'Login.php';
                 } elseif ($action === 'procesarLogin' && $_SERVER["REQUEST_METHOD"] == "POST") {
-                    $controller = new ClassIniciarSesionController();
                     $controller->iniciarSesion($_POST['correo'], $_POST['contrasena']);
                 } elseif ($action === 'logout') {
                     $controller->cerrarSesion();
@@ -127,21 +128,9 @@ function createDropdownMenu($entity, $label, $icon) {
                     $elemento = $controller->{"get" . $entity . "ByIdController"}($id);
                     require_once BASE_PATH . DIRECTORY_SEPARATOR . 'View' . DIRECTORY_SEPARATOR . $entity . DIRECTORY_SEPARATOR . 'form' . $entity . '.php';
                 }
-            } elseif ($action === 'detalle' && $id) {
-                $elemento = $controller->{"get" . $entity . "ByIdController"}($id);
-                require_once BASE_PATH . DIRECTORY_SEPARATOR . 'View' . DIRECTORY_SEPARATOR . $entity . DIRECTORY_SEPARATOR . 'detalle' . $entity . '.php';
-            } elseif ($action === 'eliminar' && $id) {
-                $controller->{"delete" . $entity . "Controller"}($id);
-            } else {
-                echo "<p class='text-danger'>Acción no válida</p>";
             }
-        } else {
-            echo "<p class='text-danger'>Entidad no válida</p>";
-        }           
+        }
         ?>
     </div>
-
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
