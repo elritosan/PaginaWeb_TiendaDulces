@@ -7,16 +7,34 @@ if (session_status() === PHP_SESSION_NONE) {
 // Definir la ruta base para evitar concatenaciones incorrectas
 define('BASE_PATH', __DIR__);
 
+// Definir opciones de menú por tipo de usuario
+$menuOpciones = [
+    '1' => [
+        'Rol' => 'fas fa-user',
+        'Usuario' => 'fas fa-user',
+        'Categoria' => 'fas fa-list',
+        'Marca' => 'fas fa-tags',
+        'Producto' => 'fas fa-box',
+        'Pedido' => 'fas fa-shopping-cart',
+        'DetallePedido' => 'fas fa-receipt',
+        'Promocion' => 'fas fa-percent',
+        'Entrega' => 'fas fa-truck',
+        'Reporte' => 'fas fa-chart-bar',
+        'Login' => 'ClassIniciarSesionController',
+    ],
+    '2' => [
+        'Calificacion' => 'fas fa-star',
+        'Login' => 'ClassIniciarSesionController'
+    ]
+];
+
+// Obtener el tipo de usuario
+$tipoUsuario = $_SESSION['usuario']['id_rol'] ?? '2';
+
 // Obtener la entidad y la acción desde la URL (por defecto 'Usuario' y 'listar')
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $entity = $_POST['entity'] ?? null;
-    $action = $_POST['action'] ?? null;
-    $id = $_POST['id'] ?? null;
-} else {
-    $entity = $_GET['entity'] ?? null;
-    $action = $_GET['action'] ?? null;
-    $id = $_GET['id'] ?? null;
-}
+$entity = $_REQUEST['entity'] ?? null;
+$action = $_REQUEST['action'] ?? null;
+$id = $_REQUEST['id'] ?? null;
 
 // Mapeo de entidades con sus controladores correspondientes
 $controllers = [
@@ -31,13 +49,13 @@ $controllers = [
     'Entrega' => 'ClassEntregaController',
     'Rol' => 'ClassRolController',
     'Login' => 'ClassIniciarSesionController',
-    'Reporte' => 'ClassReporteController' // Nuevo
+    'Reporte' => 'ClassReporteController'
 ];
 
-// Función para generar el menú
+// Función para generar el menú dinámicamente
 function createDropdownMenu($entity, $label, $icon) {
     return "
-    <li class='nav-item dropdown'>
+    <li class='nav-item'>
         <a class='nav-link' href='index.php?entity=$entity&action=listar'>
             <i class='$icon'></i> $label
         </a>
@@ -51,13 +69,10 @@ function createDropdownMenu($entity, $label, $icon) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Gestión de Tienda</title>
-
-    <!-- Bootstrap y FontAwesome -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://kit.fontawesome.com/49ed2ef561.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <!-- Barra de navegación -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container-fluid">
             <a class="navbar-brand" href="index.php"><i class="fas fa-store"></i> Tienda</a>
@@ -66,24 +81,17 @@ function createDropdownMenu($entity, $label, $icon) {
             </button>
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav">
-                    <?php
-                    echo createDropdownMenu('Rol', 'Roles', 'fas fa-user');
-                    echo createDropdownMenu('Usuario', 'Usuarios', 'fas fa-user');
-                    echo createDropdownMenu('Categoria', 'Categorías', 'fas fa-list');
-                    echo createDropdownMenu('Marca', 'Marcas', 'fas fa-tags');
-                    echo createDropdownMenu('Producto', 'Productos', 'fas fa-box');
-                    echo createDropdownMenu('Pedido', 'Pedidos', 'fas fa-shopping-cart');
-                    echo createDropdownMenu('DetallePedido', 'Detalles Pedido', 'fas fa-receipt');
-                    echo createDropdownMenu('Promocion', 'Promociones', 'fas fa-percent');
-                    echo createDropdownMenu('Calificacion', 'Calificaciones', 'fas fa-star');
-                    echo createDropdownMenu('Entrega', 'Entregas', 'fas fa-truck');
-                    echo createDropdownMenu('Reporte', 'Reportes', 'fas fa-chart-bar'); // Nuevo
+                <?php
+                    foreach ($menuOpciones[$tipoUsuario] as $entidad => $icon) {
+                        $Opciones = ($entidad != 'Login') ? createDropdownMenu($entidad, $entidad, $icon) : null;
+                        echo $Opciones;
+                    }
                     ?>
                     <!-- Opción de Login/Logout -->
                     <li class="nav-item">
                         <?php if (isset($_SESSION['usuario'])): ?>
                             <a class="nav-link text-danger" href="index.php?entity=Login&action=logout">
-                                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión (<?php echo $_SESSION['usuario']['nombre']; ?>)
+                                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión (<?php echo $_SESSION['usuario']['nombre'].$_SESSION['usuario']['id_rol']; ?>)
                             </a>
                         <?php else: ?>
                             <a class="nav-link text-success" href="index.php?entity=Login&action=login">
@@ -101,7 +109,6 @@ function createDropdownMenu($entity, $label, $icon) {
         if (array_key_exists($entity, $controllers)) {
             require_once BASE_PATH . DIRECTORY_SEPARATOR . 'Controller' . DIRECTORY_SEPARATOR . $controllers[$entity] . '.php';
             $controller = new $controllers[$entity]();
-            
             if ($entity === 'Reporte' && $action === 'listar') {
                 require_once BASE_PATH . DIRECTORY_SEPARATOR . 'View' . DIRECTORY_SEPARATOR . 'Reporte' . DIRECTORY_SEPARATOR . 'listaReporte.php';
             } elseif ($entity === 'Login') {
