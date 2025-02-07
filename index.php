@@ -121,6 +121,9 @@ function createDropdownMenu($entity, $label, $icon) {
                 } else {
                     require_once BASE_PATH . DIRECTORY_SEPARATOR . 'View' . DIRECTORY_SEPARATOR . $entity . DIRECTORY_SEPARATOR . 'form' . $entity . '.php';
                 }
+            } elseif ($action === 'detalle' && $id) {
+                $elemento = $controller->{"get" . $entity . "ByIdController"}($id);
+                require_once BASE_PATH . DIRECTORY_SEPARATOR . 'View' . DIRECTORY_SEPARATOR . $entity . DIRECTORY_SEPARATOR . 'detalle' . $entity . '.php';
             } elseif ($action === 'editar' && $id) {
                 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $controller->{"update" . $entity . "Controller"}();
