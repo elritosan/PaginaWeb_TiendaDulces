@@ -135,6 +135,8 @@ function createDropdownMenu($entity, $label, $icon) {
                     $elemento = $controller->{"get" . $entity . "ByIdController"}($id);
                     require_once BASE_PATH . DIRECTORY_SEPARATOR . 'View' . DIRECTORY_SEPARATOR . $entity . DIRECTORY_SEPARATOR . 'form' . $entity . '.php';
                 }
+            } elseif ($action === 'eliminar' && $id) {
+                $controller->{"delete" . $entity . "Controller"}($id);
             }
         }
         ?>
