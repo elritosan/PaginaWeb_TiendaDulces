@@ -22,6 +22,7 @@ $menuOpciones = [
         'Reporte' => 'fas fa-chart-bar'
     ],
     '2' => [
+        'Usuario' => 'fas fa-user',
         'Calificacion' => 'fas fa-star',
     ]
 ];
