@@ -19,12 +19,10 @@ $menuOpciones = [
         'DetallePedido' => 'fas fa-receipt',
         'Promocion' => 'fas fa-percent',
         'Entrega' => 'fas fa-truck',
-        'Reporte' => 'fas fa-chart-bar',
-        'Login' => 'ClassIniciarSesionController',
+        'Reporte' => 'fas fa-chart-bar'
     ],
     '2' => [
         'Calificacion' => 'fas fa-star',
-        'Login' => 'ClassIniciarSesionController'
     ]
 ];
 
@@ -83,15 +81,14 @@ function createDropdownMenu($entity, $label, $icon) {
                 <ul class="navbar-nav">
                 <?php
                     foreach ($menuOpciones[$tipoUsuario] as $entidad => $icon) {
-                        $Opciones = ($entidad != 'Login') ? createDropdownMenu($entidad, $entidad, $icon) : null;
-                        echo $Opciones;
+                        echo createDropdownMenu($entidad, $entidad, $icon);
                     }
                     ?>
                     <!-- Opción de Login/Logout -->
                     <li class="nav-item">
                         <?php if (isset($_SESSION['usuario'])): ?>
                             <a class="nav-link text-danger" href="index.php?entity=Login&action=logout">
-                                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión (<?php echo $_SESSION['usuario']['nombre'].$_SESSION['usuario']['id_rol']; ?>)
+                                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión (<?php echo $_SESSION['usuario']['nombre']; ?>)
                             </a>
                         <?php else: ?>
                             <a class="nav-link text-success" href="index.php?entity=Login&action=login">
