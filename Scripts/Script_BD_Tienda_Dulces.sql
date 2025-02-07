@@ -99,7 +99,7 @@ CREATE TABLE entregas (
     id_pedido INT,
     direccion_entrega TEXT NOT NULL,
     fecha_estimada DATE,
-    estado ENUM('pendiente', 'en camino', 'entregado') DEFAULT 'pendiente',
+    estado ENUM('pendiente', 'en camino', 'entregado', 'cancelado') DEFAULT 'pendiente',
     FOREIGN KEY (id_pedido) REFERENCES pedidos(id) ON DELETE CASCADE
 );
 
