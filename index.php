@@ -24,6 +24,9 @@ $menuOpciones = [
     '2' => [
         'Usuario' => 'fas fa-user',
         'Calificacion' => 'fas fa-star',
+        'PeticionCompra' => 'fas fa-shopping-cart',
+        'Pedido' => 'fas fa-shopping-cart',
+        'Entrega' => 'fas fa-truck',
     ]
 ];
 
@@ -48,7 +51,8 @@ $controllers = [
     'Entrega' => 'ClassEntregaController',
     'Rol' => 'ClassRolController',
     'Login' => 'ClassIniciarSesionController',
-    'Reporte' => 'ClassReporteController'
+    'Reporte' => 'ClassReporteController',
+    'PeticionCompra' => 'ClassPeticionCompraController'
 ];
 
 // Función para generar el menú dinámicamente
@@ -117,6 +121,9 @@ function createDropdownMenu($entity, $label, $icon) {
                 } elseif ($action === 'logout') {
                     $controller->cerrarSesion();
                 } 
+            } elseif ($entity === 'PeticionCompra' && $action === 'listar') {
+                $controller->procesarCompraController();
+                require_once BASE_PATH . DIRECTORY_SEPARATOR . 'View' . DIRECTORY_SEPARATOR . $entity . DIRECTORY_SEPARATOR . 'lista' . $entity . '.php';
             } elseif ($action === 'listar') {
                 $listadoelementos = $controller->{"get" . $entity . "Controller"}();
                 require_once BASE_PATH . DIRECTORY_SEPARATOR . 'View' . DIRECTORY_SEPARATOR . $entity . DIRECTORY_SEPARATOR . 'lista' . $entity . '.php';

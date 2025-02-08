@@ -53,5 +53,21 @@ class ClassDetallePedido {
         $stmt->bindParam(':id', $id);
         $stmt->execute();
     }
+
+    public function crearDetallePedido($id_pedido, $id_producto, $cantidad, $precio_unitario) {
+        try {
+            $stmt = $this->conn->prepare("
+                INSERT INTO detalles_pedido (id_pedido, id_producto, cantidad, precio_unitario)
+                VALUES (:id_pedido, :id_producto, :cantidad, :precio_unitario)
+            ");
+            $stmt->bindParam(':id_pedido', $id_pedido, PDO::PARAM_INT);
+            $stmt->bindParam(':id_producto', $id_producto, PDO::PARAM_INT);
+            $stmt->bindParam(':cantidad', $cantidad, PDO::PARAM_INT);
+            $stmt->bindParam(':precio_unitario', $precio_unitario, PDO::PARAM_STR);
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            return false;
+        }
+    }    
 }
 ?>

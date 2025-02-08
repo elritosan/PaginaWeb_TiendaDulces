@@ -50,5 +50,17 @@ class ClassPedido {
         $stmt->bindParam(':id', $id);
         $stmt->execute();
     }
+
+    public function crearPedido($id_usuario, $total) {
+        try {
+            $stmt = $this->conn->prepare("INSERT INTO pedidos (id_usuario, total) VALUES (:id_usuario, :total)");
+            $stmt->bindParam(':id_usuario', $id_usuario, PDO::PARAM_INT);
+            $stmt->bindParam(':total', $total, PDO::PARAM_STR);
+            $stmt->execute();
+            return $this->conn->lastInsertId();
+        } catch (PDOException $e) {
+            return false;
+        }
+    }    
 }
 ?>

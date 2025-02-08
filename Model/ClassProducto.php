@@ -59,5 +59,28 @@ class ClassProducto {
         $stmt->bindParam(':id', $id);
         $stmt->execute();
     }
+
+    public function actualizarStock($id_producto, $cantidad) {
+        try {
+            $stmt = $this->conn->prepare("UPDATE productos SET stock = stock + :cantidad WHERE id = :id_producto AND stock + :cantidad >= 0");
+            $stmt->bindParam(':id_producto', $id_producto, PDO::PARAM_INT);
+            $stmt->bindParam(':cantidad', $cantidad, PDO::PARAM_INT);
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+    
+    public function obtenerStock($id_producto) {
+        try {
+            $stmt = $this->conn->prepare("SELECT stock FROM productos WHERE id = :id_producto");
+            $stmt->bindParam(':id_producto', $id_producto, PDO::PARAM_INT);
+            $stmt->execute();
+            $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $resultado ? $resultado['stock'] : 0;
+        } catch (PDOException $e) {
+            return 0;
+        }
+    }    
 }
 ?>
