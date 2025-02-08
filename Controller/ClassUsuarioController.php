@@ -33,13 +33,17 @@ class ClassUsuarioController {
             $id = $_POST['id'];
             $nombre = $_POST['nombre'];
             $correo = $_POST['correo'];
+            $contrasena = $_POST['contrasena'] ?? ''; // Si está vacío, se mantiene la actual
+            $direccion = $_POST['direccion'];
+            $telefono = $_POST['telefono'];
             $id_rol = $_POST['id_rol'];
-
+    
             $usuarioModel = new ClassUsuario();
-            $usuarioModel->updateUsuario($id, $nombre, $correo, $id_rol);
+            $usuarioModel->updateUsuario($id, $nombre, $correo, $contrasena, $direccion, $telefono, $id_rol);
             echo "<script>window.location.href = 'index.php?entity=Usuario&action=listar';</script>";
         }
     }
+    
 
     public function deleteUsuarioController() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {

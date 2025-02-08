@@ -52,18 +52,37 @@ class ClassUsuario {
     }      
 
     // Actualizar un usuario
-    public function updateUsuario($id, $nombre, $correo, $id_rol) {
+    public function updateUsuario($id, $nombre, $correo, $contrasena, $direccion, $telefono, $id_rol) {
         try {
-            $stmt = $this->conn->prepare("UPDATE usuarios SET nombre = :nombre, correo = :correo, id_rol = :id_rol WHERE id = :id");
+            if (!empty($contrasena)) {
+                // Si hay una nueva contraseña, encriptarla
+                $hash_pass = password_hash($contrasena, PASSWORD_BCRYPT);
+                $stmt = $this->conn->prepare("UPDATE usuarios 
+                                              SET nombre = :nombre, correo = :correo, contrasena = :contrasena, direccion = :direccion, 
+                                                  telefono = :telefono, id_rol = :id_rol 
+                                              WHERE id = :id");
+                $stmt->bindParam(':contrasena', $hash_pass);
+            } else {
+                // Si no se cambia la contraseña, mantener la existente
+                $stmt = $this->conn->prepare("UPDATE usuarios 
+                                              SET nombre = :nombre, correo = :correo, direccion = :direccion, 
+                                                  telefono = :telefono, id_rol = :id_rol 
+                                              WHERE id = :id");
+            }
+            
             $stmt->bindParam(':id', $id);
             $stmt->bindParam(':nombre', $nombre);
             $stmt->bindParam(':correo', $correo);
+            $stmt->bindParam(':direccion', $direccion);
+            $stmt->bindParam(':telefono', $telefono);
             $stmt->bindParam(':id_rol', $id_rol);
+            
             return $stmt->execute();
         } catch (PDOException $e) {
             return "Error: " . $e->getMessage();
         }
     }
+    
 
     // Eliminar un usuario
     public function deleteUsuario($id) {
