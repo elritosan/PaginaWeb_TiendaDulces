@@ -1,11 +1,17 @@
 <?php
 require_once BASE_PATH . DIRECTORY_SEPARATOR . 'Model' . DIRECTORY_SEPARATOR . 'ClassUsuario.php';
+require_once BASE_PATH . DIRECTORY_SEPARATOR . 'Model' . DIRECTORY_SEPARATOR . 'ClassRol.php';
 
 $usuario = $elemento;
 if (!isset($usuario) || empty($usuario)) {
     echo "<p class='text-danger'>Usuario no encontrado.</p>";
     return;
 }
+
+// Instancia de la clase rol
+$rolModel = new ClassRol();
+$rol = $rolModel->getRolById($usuario['id_rol']);
+$nombre_rol = $rol ? htmlspecialchars($rol['nombrerol']) : "No especificado";
 ?>
 
 <h2>Detalle del Usuario</h2>
@@ -15,7 +21,7 @@ if (!isset($usuario) || empty($usuario)) {
     <li class="list-group-item"><strong>Correo:</strong> <?php echo htmlspecialchars($usuario['correo']); ?></li>
     <li class="list-group-item"><strong>Dirección:</strong> <?php echo htmlspecialchars($usuario['direccion']); ?></li>
     <li class="list-group-item"><strong>Teléfono:</strong> <?php echo htmlspecialchars($usuario['telefono']); ?></li>
-    <li class="list-group-item"><strong>Rol:</strong> <?php echo htmlspecialchars($usuario['id_rol']); ?></li>
+    <li class="list-group-item"><strong>Rol:</strong> <?php echo $nombre_rol; ?></li>
     <li class="list-group-item"><strong>Fecha de Registro:</strong> <?php echo htmlspecialchars($usuario['fecha_registro']); ?></li>
 </ul>
 
