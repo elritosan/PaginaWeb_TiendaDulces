@@ -1,16 +1,23 @@
 <?php
+require_once BASE_PATH . DIRECTORY_SEPARATOR . 'Model' . DIRECTORY_SEPARATOR . 'ClassProducto.php';
+
 $detallePedido = $elemento ?? null;
 if (!isset($detallePedido) || empty($detallePedido)) {
     echo "<p class='text-danger'>Detalle de Pedido no encontrado.</p>";
     return;
 }
+
+// Instancia de la clase producto
+$productoModel = new ClassProducto();
+$producto = $productoModel->getProductoById($detallePedido['id_producto']);
+$nombre_producto = $producto ? htmlspecialchars($producto['nombre']) : "No especificado";
 ?>
 
 <h2>Detalle del Pedido</h2>
 <ul class="list-group">
     <li class="list-group-item"><strong>ID:</strong> <?php echo htmlspecialchars($detallePedido['id']); ?></li>
     <li class="list-group-item"><strong>ID Pedido:</strong> <?php echo htmlspecialchars($detallePedido['id_pedido']); ?></li>
-    <li class="list-group-item"><strong>ID Producto:</strong> <?php echo htmlspecialchars($detallePedido['id_producto']); ?></li>
+    <li class="list-group-item"><strong>Producto:</strong> <?php echo $nombre_producto; ?></li>
     <li class="list-group-item"><strong>Cantidad:</strong> <?php echo htmlspecialchars($detallePedido['cantidad']); ?></li>
     <li class="list-group-item"><strong>Precio Unitario:</strong> <?php echo htmlspecialchars($detallePedido['precio_unitario']); ?></li>
 </ul>
