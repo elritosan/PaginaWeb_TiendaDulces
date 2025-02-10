@@ -160,6 +160,16 @@ function createDropdownMenu($entity, $label, $icon) {
             } elseif ($action === 'eliminar' && $id) {
                 $controller->{"delete" . $entity . "Controller"}($id);
             }
+            if ($entity === 'Usuario' && $action === 'listar') {
+                // Verificar si existe el parámetro de búsqueda
+                $busqueda = isset($_GET['busqueda']) ? $_GET['busqueda'] : '';
+        
+                // Pasar la búsqueda al controlador
+                $listadoelementos = $controller->listarUsuariosController($busqueda); // Método en tu controlador
+        
+                // Cargar la vista de listaUsuario.php
+                require_once BASE_PATH . DIRECTORY_SEPARATOR . 'View' . DIRECTORY_SEPARATOR . $entity . DIRECTORY_SEPARATOR . 'lista' . $entity . '.php';
+            }
         }
         ?>
     </div>
