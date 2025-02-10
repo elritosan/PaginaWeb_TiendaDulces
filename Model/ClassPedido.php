@@ -50,5 +50,32 @@ class ClassPedido {
         $stmt->bindParam(':id', $id);
         $stmt->execute();
     }
+
+    public function crearPedido($id_usuario, $total) {
+        try {
+            $stmt = $this->conn->prepare("INSERT INTO pedidos (id_usuario, total) VALUES (:id_usuario, :total)");
+            $stmt->bindParam(':id_usuario', $id_usuario, PDO::PARAM_INT);
+            $stmt->bindParam(':total', $total, PDO::PARAM_STR);
+            $stmt->execute();
+            return $this->conn->lastInsertId();
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+    
+    public function listarPedido($busqueda = '') {
+        try {
+            if ($busqueda) {
+                $stmt = $this->conn->prepare("SELECT * FROM pedidos WHERE id LIKE :busqueda");
+                $stmt->bindValue(':busqueda', '%' . $busqueda . '%');
+            } else {
+                $stmt = $this->conn->prepare("SELECT * FROM pedidos");
+            }
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            return "Error: " . $e->getMessage();
+        }
+    }
 }
 ?>

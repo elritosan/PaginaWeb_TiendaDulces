@@ -1,15 +1,22 @@
 <?php
+require_once BASE_PATH . DIRECTORY_SEPARATOR . 'Model' . DIRECTORY_SEPARATOR . 'ClassProducto.php';
+
 $promocion = $elemento ?? null;
 if (!isset($promocion) || empty($promocion)) {
     echo "<p class='text-danger'>Promoción no encontrada.</p>";
     return;
 }
+
+// Instancia de la clase producto
+$productoModel = new ClassProducto();
+$producto = $productoModel->getProductoById($promocion['id_producto']);
+$nombre_producto = $producto ? htmlspecialchars($producto['nombre']) : "No especificado";
 ?>
 
 <h2>Detalle de la Promoción</h2>
 <ul class="list-group">
     <li class="list-group-item"><strong>ID:</strong> <?php echo htmlspecialchars($promocion['id']); ?></li>
-    <li class="list-group-item"><strong>ID Producto:</strong> <?php echo htmlspecialchars($promocion['id_producto']); ?></li>
+    <li class="list-group-item"><strong>Producto:</strong> <?php echo $nombre_producto; ?></li>
     <li class="list-group-item"><strong>Descuento:</strong> <?php echo htmlspecialchars($promocion['descuento']); ?>%</li>
     <li class="list-group-item"><strong>Fecha Inicio:</strong> <?php echo htmlspecialchars($promocion['fecha_inicio']); ?></li>
     <li class="list-group-item"><strong>Fecha Fin:</strong> <?php echo htmlspecialchars($promocion['fecha_fin']); ?></li>

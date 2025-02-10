@@ -53,5 +53,19 @@ class ClassEntrega {
         $stmt->bindParam(':id', $id);
         $stmt->execute();
     }
+
+    public function crearEntrega($id_pedido, $direccion_entrega) {
+        try {
+            $stmt = $this->conn->prepare("
+                INSERT INTO entregas (id_pedido, direccion_entrega, estado) 
+                VALUES (:id_pedido, :direccion_entrega, 'pendiente')
+            ");
+            $stmt->bindParam(':id_pedido', $id_pedido, PDO::PARAM_INT);
+            $stmt->bindParam(':direccion_entrega', $direccion_entrega, PDO::PARAM_STR);
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            return false;
+        }
+    }    
 }
 ?>

@@ -43,5 +43,15 @@ class ClassCategoriaController {
             echo "<script>window.location.href = 'index.php?entity=Categoria&action=listar';</script>";
         }
     }
+
+    public function listarCategoriaController($busqueda = '') {
+        // Instanciamos el modelo de usuario correctamente
+        $categoriaModel = new ClassCategoria();
+        
+        // Ahora llamamos al método listarUsuarios en el modelo
+        $categoria = $categoriaModel->listarCategoria($busqueda);
+        
+        return $categoria;
+    }
 }
 ?>

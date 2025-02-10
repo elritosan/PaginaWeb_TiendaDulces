@@ -53,5 +53,21 @@ class ClassPromocion {
         $stmt->bindParam(':id', $id);
         $stmt->execute();
     }
+
+    public function obtenerDescuento($id_producto) {
+        try {
+            $stmt = $this->conn->prepare("
+                SELECT descuento FROM promociones 
+                WHERE id_producto = :id_producto 
+                AND CURDATE() BETWEEN fecha_inicio AND fecha_fin
+            ");
+            $stmt->bindParam(':id_producto', $id_producto, PDO::PARAM_INT);
+            $stmt->execute();
+            $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $resultado ? $resultado['descuento'] : 0;
+        } catch (PDOException $e) {
+            return 0;
+        }
+    }   
 }
 ?>

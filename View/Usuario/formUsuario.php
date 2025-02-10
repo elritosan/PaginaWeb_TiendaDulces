@@ -1,12 +1,16 @@
 <?php
-// $usuario = $elemento;
-$usuario = $elemento ?? ['id' => '', 'nombre' => '', 'correo' => '', 'direccion' => '', 'telefono' => '', 'tipo_usuario' => 'cliente'];
-$isEdit = !empty($usuario['id']); // Si tiene ID, es edición
+require_once BASE_PATH . DIRECTORY_SEPARATOR . 'Model' . DIRECTORY_SEPARATOR . 'ClassUsuario.php';
+require_once BASE_PATH . DIRECTORY_SEPARATOR . 'Model' . DIRECTORY_SEPARATOR . 'ClassRol.php';
+
+$rolModel = new ClassRol();
+$roles = $rolModel->getRoles();
+
+$usuario = $elemento ?? ['id' => '', 'nombre' => '', 'correo' => '', 'direccion' => '', 'telefono' => '', 'id_rol' => ''];
+$isEdit = !empty($usuario['id']);
 ?>
 
 <h2><?php echo $isEdit ? 'Editar Usuario' : 'Registrar Usuario'; ?></h2>
 <form method="POST" action="index.php">
-    <!-- Enviar la entidad y acción en un input hidden -->
     <input type="hidden" name="entity" value="Usuario">
     <input type="hidden" name="action" value="<?php echo $isEdit ? 'editar' : 'insertar'; ?>">
     <?php if ($isEdit): ?>
@@ -35,10 +39,13 @@ $isEdit = !empty($usuario['id']); // Si tiene ID, es edición
         <input type="text" name="telefono" class="form-control" value="<?php echo htmlspecialchars($usuario['telefono']); ?>">
     </div>
     <div class="mb-3">
-        <label class="form-label">Tipo de Usuario</label>
-        <select name="tipo_usuario" class="form-control">
-            <option value="cliente" <?php echo $usuario['tipo_usuario'] == 'cliente' ? 'selected' : ''; ?>>Cliente</option>
-            <option value="admin" <?php echo $usuario['tipo_usuario'] == 'admin' ? 'selected' : ''; ?>>Administrador</option>
+        <label class="form-label">Rol</label>
+        <select name="id_rol" class="form-control">
+            <?php foreach ($roles as $rol): ?>
+                <option value="<?php echo $rol['id']; ?>" <?php echo $usuario['id_rol'] == $rol['id'] ? 'selected' : ''; ?>>
+                    <?php echo htmlspecialchars($rol['nombrerol']); ?>
+                </option>
+            <?php endforeach; ?>
         </select>
     </div>
     <button type="submit" class="btn btn-success">Guardar</button>

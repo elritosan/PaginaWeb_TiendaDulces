@@ -5,16 +5,12 @@ class ClassUsuarioController {
 
     public function getUsuarioController() {
         $usuarioModel = new ClassUsuario();
-        $usuarios = $usuarioModel->getUsuarios();
-
-        return $usuarios;
+        return $usuarioModel->getUsuarios();
     }
 
     public function getUsuarioByIdController($id) {
         $usuarioModel = new ClassUsuario();
-        $usuario = $usuarioModel->getUsuarioById($id);
-
-        return $usuario;
+        return $usuarioModel->getUsuarioById($id);
     }
 
     public function setUsuarioController() {
@@ -24,23 +20,12 @@ class ClassUsuarioController {
             $contrasena = $_POST['contrasena'] ?? null;
             $direccion = $_POST['direccion'] ?? null;
             $telefono = $_POST['telefono'] ?? null;
-            $tipo_usuario = $_POST['tipo_usuario'] ?? 'cliente';
-    
-            if (!$nombre || !$correo || !$contrasena || !$direccion || !$telefono) {
-                echo "Todos los campos son obligatorios.";
-                return;
-            }
+            $id_rol = $_POST['id_rol'] ?? null;
     
             $usuarioModel = new ClassUsuario();
-            $resultado = $usuarioModel->setUsuario($nombre, $correo, $contrasena, $direccion, $telefono, $tipo_usuario);
-    
-            if ($resultado === true) {
-                echo "Usuario insertado con éxito!";
-            } else {
-                echo "Error al insertar usuario: " . $resultado;
-            }
+            $usuarioModel->setUsuario($nombre, $correo, $contrasena, $direccion, $telefono, $id_rol);
+            echo "<script>window.location.href = 'index.php?entity=Usuario&action=listar';</script>";
         }
-    
     }    
 
     public function updateUsuarioController() {
@@ -48,18 +33,39 @@ class ClassUsuarioController {
             $id = $_POST['id'];
             $nombre = $_POST['nombre'];
             $correo = $_POST['correo'];
-            $tipo_usuario = $_POST['tipo_usuario'];
-
+            $contrasena = $_POST['contrasena'] ?? ''; // Si está vacío, se mantiene la actual
+            $direccion = $_POST['direccion'];
+            $telefono = $_POST['telefono'];
+            $id_rol = $_POST['id_rol'];
+    
             $usuarioModel = new ClassUsuario();
-            $usuarioModel->updateUsuario($id, $nombre, $correo, $tipo_usuario);
-            echo "Usuario actualizado con éxito!";
+            $usuarioModel->updateUsuario($id, $nombre, $correo, $contrasena, $direccion, $telefono, $id_rol);
+            echo "<script>window.location.href = 'index.php?entity=Usuario&action=listar';</script>";
         }
     }
+    
 
-    public function deleteUsuarioController($id) {
+    public function deleteUsuarioController() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
+            $id = $_POST['id'];
+            
             $usuarioModel = new ClassUsuario();
             $usuarioModel->deleteUsuario($id);
-            echo "Usuario Eliminado con éxito!";
-    }   
+            echo "<script>window.location.href = 'index.php?entity=Usuario&action=listar';</script>";
+        }
+    }
+    
+    public function listarUsuariosController($busqueda = '') {
+        // Instanciamos el modelo de usuario correctamente
+        $usuarioModel = new ClassUsuario();
+        
+        // Ahora llamamos al método listarUsuarios en el modelo
+        $usuarios = $usuarioModel->listarUsuarios($busqueda);
+        
+        return $usuarios;
+    }
+    
+    
+    
 }
 ?>

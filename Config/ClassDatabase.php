@@ -4,7 +4,7 @@ class ClassDatabase {
     private $host = 'localhost'; // Dirección del servidor de la base de datos
     private $db_name = 'bd_tienda_dulces'; // Nombre de la base de datos
     private $username = 'root'; // Nombre de usuario (por defecto en XAMPP es 'root')
-    private $password = 'password'; // Contraseña vacía, ya que no tienes configurada ninguna
+    private $password = ''; // Contraseña vacía, ya que no tienes configurada ninguna
     private $conn;
 
     // Método para obtener la conexión

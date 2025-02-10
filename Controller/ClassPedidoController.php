@@ -47,5 +47,15 @@ class ClassPedidoController {
             echo "<script>window.location.href = 'index.php?entity=Pedido&action=listar';</script>";
         }
     }
+
+    public function listarPedidoController($busqueda = '') {
+        // Instanciamos el modelo de usuario correctamente
+        $pedidoModel = new ClassPedido();
+        
+        // Ahora llamamos al método listarUsuarios en el modelo
+        $pedidos = $marcaModel->listarPedido($busqueda);
+        
+        return $pedidos;
+    }
 }
 ?>

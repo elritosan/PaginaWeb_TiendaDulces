@@ -1,5 +1,6 @@
+SELECT * FROM roles;
 SELECT * FROM usuarios;
-SELECT * FROM categorias;
+SELECT * FROM categoriass;
 SELECT * FROM marcas;
 SELECT * FROM productos;
 SELECT * FROM promociones;
