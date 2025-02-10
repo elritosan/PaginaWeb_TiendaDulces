@@ -96,7 +96,21 @@ function createDropdownMenu($entity, $label, $icon) {
                                 <i class="fas fa-sign-out-alt"></i> Cerrar Sesión (<?php echo $_SESSION['usuario']['nombre']; ?>)
                             </a>
                         <?php else: ?>
-                            <a class="nav-link text-success" href="index.php?entity=Login&action=login">
+                            <a class="navbar-brand" href="index.php?entity=Login&action=login">
+                                <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+                            </a>
+                        <?php endif; ?>
+                    </li>
+                </ul>
+               
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <?php if (isset($_SESSION['usuario'])): ?>
+                            <a class="nav-link text-white" href="index.php?entity=Login&action=logout">
+                                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión (<?php echo $_SESSION['usuario']['nombre']; ?>)
+                            </a>
+                        <?php else: ?>
+                            <a class="nav-link text-white" href="index.php?entity=Login&action=login">
                                 <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
                             </a>
                         <?php endif; ?>
