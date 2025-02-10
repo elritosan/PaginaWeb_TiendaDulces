@@ -45,5 +45,20 @@ class ClassCategoria {
         $stmt->bindParam(':id', $id);
         $stmt->execute();
     }
+
+    public function listarCategoria($busqueda = '') {
+        try {
+            if ($busqueda) {
+                $stmt = $this->conn->prepare("SELECT * FROM categorias WHERE nombre LIKE :busqueda OR correo LIKE :busqueda");
+                $stmt->bindValue(':busqueda', '%' . $busqueda . '%');
+            } else {
+                $stmt = $this->conn->prepare("SELECT * FROM categorias");
+            }
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            return "Error: " . $e->getMessage();
+        }
+    }
 }
 ?>

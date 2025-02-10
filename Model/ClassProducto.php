@@ -81,6 +81,21 @@ class ClassProducto {
         } catch (PDOException $e) {
             return 0;
         }
-    }    
+    } 
+    
+    public function listarProductos($busqueda = '') {
+        try {
+            if ($busqueda) {
+                $stmt = $this->conn->prepare("SELECT * FROM productos WHERE nombre LIKE :busqueda");
+                $stmt->bindValue(':busqueda', '%' . $busqueda . '%');
+            } else {
+                $stmt = $this->conn->prepare("SELECT * FROM productos");
+            }
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            return "Error: " . $e->getMessage();
+        }
+    }
 }
 ?>
