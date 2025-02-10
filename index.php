@@ -56,7 +56,8 @@ $controllers = [
 ];
 
 // Función para generar el menú dinámicamente
-function createDropdownMenu($entity, $label, $icon) {
+function createDropdownMenu($entity, $label, $icon)
+{
     return "
     <li class='nav-item'>
         <a class='nav-link' href='index.php?entity=$entity&action=listar'>
@@ -68,13 +69,90 @@ function createDropdownMenu($entity, $label, $icon) {
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Gestión de Tienda</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://kit.fontawesome.com/49ed2ef561.js" crossorigin="anonymous"></script>
+
+    <style>
+        /* Estilo del menú en tonos rojos/vino */
+        .navbar {
+            background: linear-gradient(90deg, #B22222, #8B0000);
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.6rem;
+            color: white;
+        }
+
+        .nav-link {
+            color: white !important;
+            font-size: 1.1rem;
+            transition: 0.3s;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+        }
+
+        /* Estilos de la ventana modal */
+        .modal-content {
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            border-radius: 10px;
+        }
+
+        .modal-header {
+            border-bottom: none;
+        }
+
+        .modal-footer {
+            border-top: none;
+        }
+
+        /* Fondo dinámico en la ventana modal */
+        .modal-body {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .modal-body img {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+        }
+
+        .modal-body img.active {
+            opacity: 1;
+        }
+
+        .modal-text {
+            position: absolute;
+            z-index: 2;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+    </style>
+
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container-fluid">
@@ -84,31 +162,20 @@ function createDropdownMenu($entity, $label, $icon) {
             </button>
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav">
-                <?php
+                    <?php
                     foreach ($menuOpciones[$tipoUsuario] as $entidad => $icon) {
                         echo createDropdownMenu($entidad, $entidad, $icon);
                     }
                     ?>
-                    <!-- Opción de Login/Logout -->
-                    <li class="nav-item">
-                        <?php if (isset($_SESSION['usuario'])): ?>
-                            <a class="nav-link text-danger" href="index.php?entity=Login&action=logout">
-                                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión (<?php echo $_SESSION['usuario']['nombre']; ?>)
-                            </a>
-                        <?php else: ?>
-                            <a class="navbar-brand" href="index.php?entity=Login&action=login">
-                                <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
-                            </a>
-                        <?php endif; ?>
-                    </li>
                 </ul>
-               
+                <!-- Opción de Login/Logout -->
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
                         <?php if (isset($_SESSION['usuario'])): ?>
                             <a class="nav-link text-white" href="index.php?entity=Login&action=logout">
                                 <i class="fas fa-sign-out-alt"></i> Cerrar Sesión (<?php echo $_SESSION['usuario']['nombre']; ?>)
                             </a>
+
                         <?php else: ?>
                             <a class="nav-link text-white" href="index.php?entity=Login&action=login">
                                 <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
@@ -116,10 +183,11 @@ function createDropdownMenu($entity, $label, $icon) {
                         <?php endif; ?>
                     </li>
                 </ul>
+
             </div>
         </div>
     </nav>
-
+   
     <div class="container mt-4">
         <?php
         if (array_key_exists($entity, $controllers)) {
@@ -134,7 +202,7 @@ function createDropdownMenu($entity, $label, $icon) {
                     $controller->iniciarSesion($_POST['correo'], $_POST['contrasena']);
                 } elseif ($action === 'logout') {
                     $controller->cerrarSesion();
-                } 
+                }
             } elseif ($entity === 'PeticionCompra' && $action === 'listar') {
                 $controller->procesarCompraController();
                 require_once BASE_PATH . DIRECTORY_SEPARATOR . 'View' . DIRECTORY_SEPARATOR . $entity . DIRECTORY_SEPARATOR . 'lista' . $entity . '.php';
@@ -160,8 +228,31 @@ function createDropdownMenu($entity, $label, $icon) {
             } elseif ($action === 'eliminar' && $id) {
                 $controller->{"delete" . $entity . "Controller"}($id);
             }
+            if ($entity === 'Usuario' && $action === 'listar') {
+                // Verificar si existe el parámetro de búsqueda
+                $busqueda = isset($_GET['busqueda']) ? $_GET['busqueda'] : '';
+
+                // Pasar la búsqueda al controlador
+                $listadoelementos = $controller->listarUsuariosController($busqueda); // Método en tu controlador
+
+                // Cargar la vista de listaUsuario.php
+                require_once BASE_PATH . DIRECTORY_SEPARATOR . 'View' . DIRECTORY_SEPARATOR . $entity . DIRECTORY_SEPARATOR . 'lista' . $entity . '.php';
+            }
         }
         ?>
     </div>
+    <script>
+        let index = 0;
+        const images = document.querySelectorAll('.modal-body img');
+
+        function cambiarImagen() {
+            images[index].classList.remove('active');
+            index = (index + 1) % images.length;
+            images[index].classList.add('active');
+        }
+
+        setInterval(cambiarImagen, 3000);
+    </script>
 </body>
+
 </html>
