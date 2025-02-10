@@ -43,5 +43,15 @@ class ClassMarcaController {
             echo "<script>window.location.href = 'index.php?entity=Marca&action=listar';</script>";
         }
     }
+
+    public function listarMarcasController($busqueda = '') {
+        // Instanciamos el modelo de usuario correctamente
+        $marcaModel = new ClassMarca();
+        
+        // Ahora llamamos al método listarUsuarios en el modelo
+        $marcas = $marcaModel->listarMarcas($busqueda);
+        
+        return $marcas;
+    }
 }
 ?>

@@ -55,5 +55,15 @@ class ClassProductoController {
             echo "<script>window.location.href = 'index.php?entity=Producto&action=listar';</script>";
         }
     }
+
+    public function listarProductosController($busqueda = '') {
+        // Instanciamos el modelo de usuario correctamente
+        $productoModel = new ClassProducto();
+        
+        // Ahora llamamos al método listarUsuarios en el modelo
+        $productos = $productoModel->listarProductos($busqueda);
+        
+        return $productos;
+    }
 }
 ?>

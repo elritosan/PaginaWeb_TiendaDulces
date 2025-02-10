@@ -53,6 +53,19 @@ class ClassUsuarioController {
             $usuarioModel->deleteUsuario($id);
             echo "<script>window.location.href = 'index.php?entity=Usuario&action=listar';</script>";
         }
-    }    
+    }
+    
+    public function listarUsuariosController($busqueda = '') {
+        // Instanciamos el modelo de usuario correctamente
+        $usuarioModel = new ClassUsuario();
+        
+        // Ahora llamamos al método listarUsuarios en el modelo
+        $usuarios = $usuarioModel->listarUsuarios($busqueda);
+        
+        return $usuarios;
+    }
+    
+    
+    
 }
 ?>
