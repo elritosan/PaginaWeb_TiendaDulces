@@ -49,5 +49,15 @@ class ClassPromocionController {
             echo "<script>window.location.href = 'index.php?entity=Promocion&action=listar';</script>";
         }
     }
+
+    public function listarPromocionController($busqueda = '') {
+        // Instanciamos el modelo de usuario correctamente
+        $promocionModel = new ClassPromocion();
+        
+        // Ahora llamamos al método listarUsuarios en el modelo
+        $promocion = $promocionModel->listarPromocion($busqueda);
+        
+        return $promocion;
+    }
 }
 ?>

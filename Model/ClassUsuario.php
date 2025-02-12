@@ -94,5 +94,21 @@ class ClassUsuario {
             return "Error: " . $e->getMessage();
         }
     }
+
+    public function listarUsuarios($busqueda = '') {
+        try {
+            if ($busqueda) {
+                $stmt = $this->conn->prepare("SELECT * FROM usuarios WHERE nombre LIKE :busqueda OR correo LIKE :busqueda");
+                $stmt->bindValue(':busqueda', '%' . $busqueda . '%');
+            } else {
+                $stmt = $this->conn->prepare("SELECT * FROM usuarios");
+            }
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            return "Error: " . $e->getMessage();
+        }
+    }
+    
 }
 ?>

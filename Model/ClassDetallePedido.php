@@ -68,6 +68,21 @@ class ClassDetallePedido {
         } catch (PDOException $e) {
             return false;
         }
-    }    
+    }
+    
+    public function listarDetallePedido($busqueda = '') {
+        try {
+            if ($busqueda) {
+                $stmt = $this->conn->prepare("SELECT * FROM detalles_pedido WHERE id_pedido LIKE :busqueda");
+                $stmt->bindValue(':busqueda', '%' . $busqueda . '%');
+            } else {
+                $stmt = $this->conn->prepare("SELECT * FROM detalles_pedido");
+            }
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            return "Error: " . $e->getMessage();
+        }
+    }
 }
 ?>

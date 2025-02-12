@@ -68,6 +68,21 @@ class ClassPromocion {
         } catch (PDOException $e) {
             return 0;
         }
-    }   
+    }
+    
+    public function listarPromocion($busqueda = '') {
+        try {
+            if ($busqueda) {
+                $stmt = $this->conn->prepare("SELECT * FROM promociones WHERE id_producto LIKE :busqueda");
+                $stmt->bindValue(':busqueda', '%' . $busqueda . '%');
+            } else {
+                $stmt = $this->conn->prepare("SELECT * FROM promociones");
+            }
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            return "Error: " . $e->getMessage();
+        }
+    }
 }
 ?>

@@ -7,10 +7,15 @@ if (isset($_SESSION['usuario'])) {
     exit();
 }
 
+if ($entity === 'Usuario' && $action === 'insertar') {
+    require_once BASE_PATH . DIRECTORY_SEPARATOR . 'View' . DIRECTORY_SEPARATOR . 'Usuario' . DIRECTORY_SEPARATOR . 'formUsuario.php';
+}
 $error = isset($_GET['error']) ? "Credenciales incorrectas" : "";
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,7 +35,7 @@ $error = isset($_GET['error']) ? "Credenciales incorrectas" : "";
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            margin-top: 100px; 
+            margin-top: 100px;
         }
 
         /* Estilo para el icono dentro del campo */
@@ -47,11 +52,12 @@ $error = isset($_GET['error']) ? "Credenciales incorrectas" : "";
         }
     </style>
 </head>
+
 <body>
     <div class="d-flex flex-column justify-content-center align-items-center vh-60">
         <div class="login-container">
             <h2 class="text-center mb-4">Iniciar Sesión</h2>
-            
+
             <?php if ($error): ?>
                 <div class="alert alert-danger text-center"><?php echo $error; ?></div>
             <?php endif; ?>
@@ -59,12 +65,12 @@ $error = isset($_GET['error']) ? "Credenciales incorrectas" : "";
             <form method="POST" action="index.php">
                 <input type="hidden" name="entity" value="Login">
                 <input type="hidden" name="action" value="procesarLogin">
-                
+
                 <div class="mb-3">
                     <label class="form-label">Correo</label>
                     <input type="email" name="correo" class="form-control" required>
                 </div>
-                
+
                 <div class="mb-3">
                     <label class="form-label">Contraseña</label>
                     <div class="password-container">
@@ -72,10 +78,17 @@ $error = isset($_GET['error']) ? "Credenciales incorrectas" : "";
                         <i class="fas fa-eye" id="togglePassword"></i>
                     </div>
                 </div>
-                
+
                 <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
+                <div class="text-center mt-3">
+                    <a href="index.php?entity=Usuario&action=insertar" class="btn btn-primary w-100">
+                        <i class="fas fa-user-plus"></i> Registrarse
+                    </a>
+                </div>
+
                 <a href="index.php" class="btn btn-secondary w-100 mt-2">Volver</a>
             </form>
+
         </div>
     </div>
 
@@ -97,4 +110,5 @@ $error = isset($_GET['error']) ? "Credenciales incorrectas" : "";
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

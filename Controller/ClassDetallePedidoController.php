@@ -49,5 +49,14 @@ class ClassDetallePedidoController {
             echo "<script>window.location.href = 'index.php?entity=DetallePedido&action=listar';</script>";
         }
     }
+    public function listarDetallePedidoController($busqueda = '') {
+        // Instanciamos el modelo de usuario correctamente
+        $detallePedidoModel = new ClassDetallePedido();
+        
+        // Ahora llamamos al método listarUsuarios en el modelo
+        $detallePedido = $detallePedidoModel->listarDetallePedido($busqueda);
+        
+        return $detallePedido;
+    }
 }
 ?>

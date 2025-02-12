@@ -11,7 +11,7 @@ class ClassPeticionCompra {
     private $entregaModel;
     private $productoModel;
     private $promocionModel;
-    private $iva = 21; // IVA del 21%
+    private $iva = 15; // IVA del 21%
 
     public function __construct() {
         $this->detallePedidoModel = new ClassDetallePedido();

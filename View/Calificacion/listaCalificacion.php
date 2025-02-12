@@ -2,13 +2,33 @@
 require_once BASE_PATH . DIRECTORY_SEPARATOR . 'Model' . DIRECTORY_SEPARATOR . 'ClassUsuario.php';
 require_once BASE_PATH . DIRECTORY_SEPARATOR . 'Model' . DIRECTORY_SEPARATOR . 'ClassProducto.php';
 
+
+// Iniciar sesión si no está iniciada
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Verificar si el usuario está en sesión
+$rolUsuario = isset($_SESSION['usuario']['id_rol']) ? $_SESSION['usuario']['id_rol'] : null;
+
+
 echo "<h2>Lista de Calificaciones</h2>";
-echo "<a href='index.php?entity=Calificacion&action=insertar' class='btn btn-success mb-3'>Agregar Calificación</a>";
+
+// Mostrar botón "Agregar Calificación" solo si es usuario
+if ($rolUsuario == 2) {
+    echo "<a href='index.php?entity=Calificacion&action=insertar' class='btn btn-success mb-3'>Agregar Calificación</a>";
+}
 
 echo "<table class='table table-striped'>";
 echo "<thead><tr>
-        <th>ID</th><th>Usuario</th><th>Producto</th><th>Imagen</th><th>Calificación</th><th>Comentario</th><th>Fecha</th><th>Acciones</th>
-      </tr></thead><tbody>";
+        <th>ID</th><th>Usuario</th><th>Producto</th><th>Imagen</th><th>Calificación</th><th>Comentario</th><th>Fecha</th>";
+
+// Mostrar la columna "Acciones" solo si el usuario es ADMIN
+if ($rolUsuario == 2) {
+    echo "<th>Acciones</th>";
+}
+
+echo "</tr></thead><tbody>";
 
 // Instancias de las clases usuario y producto
 $usuarioModel = new ClassUsuario();
@@ -44,9 +64,12 @@ foreach ($listadoelementos as $calificacion) {
     echo "<td>{$calificacion_estrellas}</td>"; // Mostrar calificación en estrellas
     echo "<td>{$calificacion['comentario']}</td>";
     echo "<td>{$calificacion['fecha']}</td>";
-    echo "<td>
-        <a href='index.php?entity=Calificacion&action=detalle&id={$calificacion['id']}' class='btn btn-info btn-sm'>Ver Detalle</a>
-    </td>";
+    // Mostrar acciones solo si el usuario es ADMIN
+    if ($rolUsuario == 2) {
+        echo "<td>
+            <a href='index.php?entity=Calificacion&action=detalle&id={$calificacion['id']}' class='btn btn-info btn-sm'>Ver Detalle</a>
+        </td>";
+    }
     echo "</tr>";
 }
 

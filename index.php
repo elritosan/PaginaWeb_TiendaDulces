@@ -9,7 +9,7 @@ define('BASE_PATH', __DIR__);
 
 // Definir opciones de menú por tipo de usuario
 $menuOpciones = [
-    '1' => [
+    '1' => [ // Administrador
         'Rol' => 'fas fa-user',
         'Usuario' => 'fas fa-user',
         'Categoria' => 'fas fa-list',
@@ -21,17 +21,21 @@ $menuOpciones = [
         'Entrega' => 'fas fa-truck',
         'Reporte' => 'fas fa-chart-bar'
     ],
-    '2' => [
+    '2' => [ // Usuario
         'Usuario' => 'fas fa-user',
         'Calificacion' => 'fas fa-star',
         'PeticionCompra' => 'fas fa-shopping-cart',
         'Pedido' => 'fas fa-shopping-cart',
         'Entrega' => 'fas fa-truck',
+    ],
+    'guest' => [ // Sin iniciar sesión
+        'PeticionCompra' => 'fas fa-shopping-cart',
+        'Calificacion' => 'fas fa-star'
     ]
 ];
 
-// Obtener el tipo de usuario
-$tipoUsuario = $_SESSION['usuario']['id_rol'] ?? '2';
+// Obtener el tipo de usuario (si no hay sesión, asignar 'guest')
+$tipoUsuario = $_SESSION['usuario']['id_rol'] ?? 'guest';
 
 // Obtener la entidad y la acción desde la URL (por defecto 'Usuario' y 'listar')
 $entity = $_REQUEST['entity'] ?? null;
@@ -76,11 +80,11 @@ function createDropdownMenu($entity, $label, $icon)
     <title>Gestión de Tienda</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://kit.fontawesome.com/49ed2ef561.js" crossorigin="anonymous"></script>
-
     <style>
-        /* Estilo del menú en tonos rojos/vino */
+        /* Estilos del menú con colores vibrantes */
         .navbar {
-            background: linear-gradient(90deg, #B22222, #8B0000);
+            background: linear-gradient(90deg, #8B0000, #B22222);
+            /* Degradado rosa/fucsia */
         }
 
         .navbar-brand {
@@ -91,44 +95,38 @@ function createDropdownMenu($entity, $label, $icon)
 
         .nav-link {
             color: white !important;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             transition: 0.3s;
         }
 
-        .nav-link:hover,
-        .nav-link.active {
-            background: rgba(255, 255, 255, 0.2);
+        .nav-link:hover {
+            color: #ffebf3 !important;
+            transform: scale(1.05);
+        }
+
+        /* Botón de sesión */
+        .navbar-nav.ms-auto .nav-item a {
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.3);
             border-radius: 8px;
+            padding: 8px 15px;
+            transition: 0.3s;
         }
 
-        /* Estilos de la ventana modal */
-        .modal-content {
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            border-radius: 10px;
+        .navbar-nav.ms-auto .nav-item a:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: scale(1.05);
         }
 
-        .modal-header {
-            border-bottom: none;
-        }
-
-        .modal-footer {
-            border-top: none;
-        }
-
-        /* Fondo dinámico en la ventana modal */
-        .modal-body {
+        /* Fondo animado con imágenes */
+        .background-container {
             position: relative;
             width: 100%;
-            height: 400px;
+            height: 100vh;
             overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
         }
 
-        .modal-body img {
+        .background-container img {
             position: absolute;
             width: 100%;
             height: 100%;
@@ -137,24 +135,38 @@ function createDropdownMenu($entity, $label, $icon)
             transition: opacity 1.5s ease-in-out;
         }
 
-        .modal-body img.active {
+        .background-container img.active {
             opacity: 1;
         }
 
-        .modal-text {
+        /* Texto sobre el fondo */
+        .welcome-text {
             position: absolute;
-            z-index: 2;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 20px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 30px;
             border-radius: 10px;
+            max-width: 600px;
         }
 
-    </style>
+        .welcome-text h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
 
+        .welcome-text p {
+            font-size: 1.2rem;
+        }
+    </style>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <!-- Barra de navegación -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="index.php"><i class="fas fa-store"></i> Tienda</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
@@ -168,14 +180,14 @@ function createDropdownMenu($entity, $label, $icon)
                     }
                     ?>
                 </ul>
-                <!-- Opción de Login/Logout -->
+
+                <!-- Botón de sesión a la derecha -->
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
                         <?php if (isset($_SESSION['usuario'])): ?>
                             <a class="nav-link text-white" href="index.php?entity=Login&action=logout">
                                 <i class="fas fa-sign-out-alt"></i> Cerrar Sesión (<?php echo $_SESSION['usuario']['nombre']; ?>)
                             </a>
-
                         <?php else: ?>
                             <a class="nav-link text-white" href="index.php?entity=Login&action=login">
                                 <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
@@ -183,11 +195,24 @@ function createDropdownMenu($entity, $label, $icon)
                         <?php endif; ?>
                     </li>
                 </ul>
-
             </div>
         </div>
     </nav>
-   
+    <!-- Modal para Tienda -->
+    
+    <script>
+        let index = 0;
+        const images = document.querySelectorAll('.background-container img');
+
+        function cambiarImagen() {
+            images[index].classList.remove('active');
+            index = (index + 1) % images.length;
+            images[index].classList.add('active');
+        }
+
+        setInterval(cambiarImagen, 3000);
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <div class="container mt-4">
         <?php
         if (array_key_exists($entity, $controllers)) {
@@ -233,26 +258,13 @@ function createDropdownMenu($entity, $label, $icon)
                 $busqueda = isset($_GET['busqueda']) ? $_GET['busqueda'] : '';
 
                 // Pasar la búsqueda al controlador
-                $listadoelementos = $controller->listarUsuariosController($busqueda); // Método en tu controlador
-
+                $listadoelementos = $controller->listarUsuariosController($busqueda);
                 // Cargar la vista de listaUsuario.php
                 require_once BASE_PATH . DIRECTORY_SEPARATOR . 'View' . DIRECTORY_SEPARATOR . $entity . DIRECTORY_SEPARATOR . 'lista' . $entity . '.php';
             }
         }
         ?>
     </div>
-    <script>
-        let index = 0;
-        const images = document.querySelectorAll('.modal-body img');
-
-        function cambiarImagen() {
-            images[index].classList.remove('active');
-            index = (index + 1) % images.length;
-            images[index].classList.add('active');
-        }
-
-        setInterval(cambiarImagen, 3000);
-    </script>
 </body>
 
 </html>
