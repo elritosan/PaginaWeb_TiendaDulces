@@ -42,6 +42,8 @@ $entity = $_REQUEST['entity'] ?? null;
 $action = $_REQUEST['action'] ?? null;
 $id = $_REQUEST['id'] ?? null;
 
+$isLoggedIn = isset($_SESSION['usuario']) && $_SESSION['usuario'] === true;
+
 // Mapeo de entidades con sus controladores correspondientes
 $controllers = [
     'Usuario' => 'ClassUsuarioController',
@@ -198,8 +200,90 @@ function createDropdownMenu($entity, $label, $icon)
             </div>
         </div>
     </nav>
-    <!-- Modal para Tienda -->
-    
+    <!-- Fondo animado -->
+    <?php if (!$entity): ?>
+        <div class="background-container">
+            <img src="https://www.retailactual.com/media/uploads/noticias/dulces-industria-cifras-retailactual.jpg" class="active">
+            <img src="https://www.thespruceeats.com/thmb/FhHcgQni8lgV0griUeDJMTAszxI=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/chocolate_hero1-d62e5444a8734f8d8fe91f5631d51ca5.jpg" class="">
+            <img src="https://c8.alamy.com/comp/2H5G6CJ/mars-bounty-snickers-milky-way-and-twix-chocolate-bars-brands-of-mars-incorporated-2H5G6CJ.jpg" class="">
+            <img src="https://img.freepik.com/fotos-premium/coleccion-caramelos-que-incluye-caramelos-chocolate-caramelos_1243200-54048.jpg" class="">
+
+            <div class="welcome-text">
+                <h1>Bienvenidos a la Tienda de Dulces 🍬✨</h1>
+                <p>
+                    En nuestra tienda, convertimos cada momento en una dulce experiencia.
+                    Ofrecemos una gran variedad de caramelos, chocolates, gomitas y postres artesanales
+                    que endulzan la vida de grandes y pequeños.
+                </p>
+                <p>
+                    🍭 Dulces tradicionales y modernos.<br>
+                    🍫 Chocolates y rellenos.<br>
+                    🍪 Galletas y postres.<br>
+                    🎁 Canastas y regalos personalizados.
+                </p>
+                <p>¡Ven y disfruta del sabor de la felicidad!</p>
+
+                <!-- 🔹 Sección de Redes Sociales -->
+                <div class="social-links">
+                    <h5>Síguenos en nuestras redes sociales 📲</h5>
+                    <a href="https://www.facebook.com/" target="_blank" class="social-icon facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://www.instagram.com/" target="_blank" class="social-icon instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://wa.me/1234567890" target="_blank" class="social-icon whatsapp">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://kit.fontawesome.com/49ed2ef561.js" crossorigin="anonymous"></script>
+
+        <style>
+            /* 🔹 Estilos para mejorar la presentación */
+            .social-links {
+                margin-top: 15px;
+                display: flex;
+                justify-content: center;
+                gap: 15px;
+            }
+
+            .social-icon {
+                font-size: 24px;
+                width: 50px;
+                height: 50px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50%;
+                color: white;
+                text-decoration: none;
+                transition: 0.3s;
+            }
+
+            /* 🔹 Colores personalizados para cada red social */
+            .facebook {
+                background-color: #1877F2;
+            }
+
+            .instagram {
+                background: linear-gradient(45deg, #fccc63, #bc1888, #8a2be2);
+            }
+
+            .whatsapp {
+                background-color: #25D366;
+            }
+
+            /* 🔹 Efecto al pasar el mouse */
+            .social-icon:hover {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+        </style>
+    <?php endif; ?>
     <script>
         let index = 0;
         const images = document.querySelectorAll('.background-container img');
@@ -253,15 +337,15 @@ function createDropdownMenu($entity, $label, $icon)
             } elseif ($action === 'eliminar' && $id) {
                 $controller->{"delete" . $entity . "Controller"}($id);
             }
-            if ($entity === 'Usuario' && $action === 'listar') {
-                // Verificar si existe el parámetro de búsqueda
-                $busqueda = isset($_GET['busqueda']) ? $_GET['busqueda'] : '';
+            //if ($entity === 'Usuario' && $action === 'listar') {
+            // Verificar si existe el parámetro de búsqueda
+            //$busqueda = isset($_GET['busqueda']) ? $_GET['busqueda'] : '';
 
-                // Pasar la búsqueda al controlador
-                $listadoelementos = $controller->listarUsuariosController($busqueda);
-                // Cargar la vista de listaUsuario.php
-                require_once BASE_PATH . DIRECTORY_SEPARATOR . 'View' . DIRECTORY_SEPARATOR . $entity . DIRECTORY_SEPARATOR . 'lista' . $entity . '.php';
-            }
+            // Pasar la búsqueda al controlador
+            //$listadoelementos = $controller->listarUsuariosController($busqueda);
+            // Cargar la vista de listaUsuario.php
+            // require_once BASE_PATH . DIRECTORY_SEPARATOR . 'View' . DIRECTORY_SEPARATOR . $entity . DIRECTORY_SEPARATOR . 'lista' . $entity . '.php';
+            //}
         }
         ?>
     </div>

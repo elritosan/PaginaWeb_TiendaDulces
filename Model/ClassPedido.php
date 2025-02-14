@@ -77,5 +77,12 @@ class ClassPedido {
             return "Error: " . $e->getMessage();
         }
     }
+
+    public function getPedido() {
+        $sql = "SELECT id FROM pedidos";
+        $stmt = $this->conn->prepare($sql); 
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 ?>

@@ -1,3 +1,4 @@
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <?php
 require_once BASE_PATH . DIRECTORY_SEPARATOR . 'Model' . DIRECTORY_SEPARATOR . 'ClassProducto.php';
 
@@ -25,12 +26,31 @@ $nombre_producto = $producto ? htmlspecialchars($producto['nombre']) : "No espec
 <div class="mt-3">
     <a href="index.php?entity=DetallePedido&action=editar&id=<?php echo $detallePedido['id']; ?>" class="btn btn-warning">Editar</a>
 
-    <form method="POST" action="index.php" style="display:inline;">
+    <form id="deleteForm<?php echo $detallePedido['id']; ?>" method="POST" action="index.php" style="display:inline;">
         <input type="hidden" name="entity" value="DetallePedido">
         <input type="hidden" name="action" value="eliminar">
         <input type="hidden" name="id" value="<?php echo htmlspecialchars($detallePedido['id']); ?>">
-        <button type="submit" class="btn btn-danger">Eliminar</button>
+        <button type="button" class="btn btn-danger" onclick="confirmarEliminacion(<?php echo $detallePedido['id']; ?>)">Eliminar</button>
     </form>
 
     <a href="index.php?entity=DetallePedido&action=listar" class="btn btn-secondary">Volver</a>
 </div>
+
+<script>
+function confirmarEliminacion(id) {
+    Swal.fire({
+        title: "¿Estás seguro?",
+        text: "Esta acción no se puede deshacer.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById("deleteForm" + id).submit();
+        }
+    });
+}
+</script>

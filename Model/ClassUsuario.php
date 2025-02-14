@@ -109,6 +109,15 @@ class ClassUsuario {
             return "Error: " . $e->getMessage();
         }
     }
+
+    public function getUsuario() {
+        $sql = "SELECT id, nombre FROM usuarios";
+        $stmt = $this->conn->prepare($sql); 
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+    
     
 }
 ?>

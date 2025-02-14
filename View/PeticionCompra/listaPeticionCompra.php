@@ -54,22 +54,24 @@ $carrito = $_SESSION['carrito'] ?? [];
 
         /* Limitar el ancho */
         .modal-dialog {
-            max-width: 400px; /* Ajusta el ancho según lo necesites */
-            width: 90%; /* Asegura que el modal no exceda el 90% del ancho de la pantalla */
+            max-width: 400px;
+            /* Ajusta el ancho según lo necesites */
+            width: 100%;
+            /* Asegura que el modal no exceda el 90% del ancho de la pantalla */
         }
 
         /* Limitar la altura */
         .modal-content {
-            max-height: 60vh; /* Limita la altura al 60% de la altura de la ventana */
+            max-height: 60vh;
+            /* Limita la altura al 60% de la altura de la ventana */
         }
 
         .modal-body {
-            max-height: 10vh; /* Limita la altura del contenido dentro del modal */
-            overflow-y: auto; /* Muestra barras de desplazamiento si el contenido es más grande */
+            max-height: 10vh;
+            /* Limita la altura del contenido dentro del modal */
+            overflow-y: auto;
+            /* Muestra barras de desplazamiento si el contenido es más grande */
         }
-
-
-
     </style>
 </head>
 
@@ -156,12 +158,12 @@ $carrito = $_SESSION['carrito'] ?? [];
 
     <script>
         let usuarioRol = '<?php echo $usuarioRol; ?>'; // Rol del usuario desde la sesión
-        
+
         let carrito = [];
         const IVA_PORCENTAJE = 15;
-        
+
         function mostrarMensaje(mensaje) {
-            console.log("Mensaje:", mensaje);  // Verifica si la función se ejecuta
+            console.log("Mensaje:", mensaje); // Verifica si la función se ejecuta
             let modalBody = document.getElementById('modalMensajeBody');
             modalBody.innerHTML = ''; // Limpiar el contenido previo
 
@@ -178,7 +180,7 @@ $carrito = $_SESSION['carrito'] ?? [];
                 let aceptarBtn = document.createElement("button");
                 aceptarBtn.className = "btn btn-primary";
                 aceptarBtn.textContent = "Aceptar";
-                aceptarBtn.onclick = function () {
+                aceptarBtn.onclick = function() {
                     window.location.href = "index.php?entity=Pedido&action=listar";
                 };
                 modalFooter.appendChild(aceptarBtn);
@@ -254,7 +256,7 @@ $carrito = $_SESSION['carrito'] ?? [];
                 mostrarMensaje("Debes iniciar sesión para proceder con la compra.");
                 return;
             }
-            
+
             if (carrito.length === 0) {
                 mostrarMensaje("El carrito está vacío.");
                 return;
@@ -270,45 +272,45 @@ $carrito = $_SESSION['carrito'] ?? [];
 
             // Mostrar el cuadro de confirmación
             const confirmar = window.confirm("¿Estás seguro de que deseas tramitar el pedido?");
-            
+
             // Si el usuario confirma, proceder con el trámite del pedido
             if (confirmar) {
                 fetch("index.php?entity=PeticionCompra&action=listar", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        carrito,
-                        direccion
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            carrito,
+                            direccion
+                        })
                     })
-                })
-                .then(response => response.text())
-                .then(data => {
-                    console.log("Respuesta del servidor:", data);
-                    if (data.startsWith("{")) {  // Verifica si la respuesta parece JSON
-                        try {
-                            const jsonData = JSON.parse(data);
-                            if (jsonData.status === "success") {
-                                mostrarMensaje("Compra realizada con éxito. Total: " + jsonData.total + " $");
-                                carrito = [];
-                                actualizarCarrito();
-                            } else {
-                                mostrarMensaje("Error: " + jsonData.message);
+                    .then(response => response.text())
+                    .then(data => {
+                        console.log("Respuesta del servidor:", data);
+                        if (data.startsWith("{")) { // Verifica si la respuesta parece JSON
+                            try {
+                                const jsonData = JSON.parse(data);
+                                if (jsonData.status === "success") {
+                                    mostrarMensaje("Compra realizada con éxito. Total: " + jsonData.total + " $");
+                                    carrito = [];
+                                    actualizarCarrito();
+                                } else {
+                                    mostrarMensaje("Error: " + jsonData.message);
+                                }
+                            } catch (e) {
+                                console.error("Error al parsear JSON:", e);
+                                mostrarMensaje("Error de formato en la respuesta.");
                             }
-                        } catch (e) {
-                            console.error("Error al parsear JSON:", e);
-                            mostrarMensaje("Error de formato en la respuesta.");
+                        } else {
+                            let totalElement = document.getElementById("total"); // Ajusta el ID según tu HTML
+                            let total = parseFloat(totalElement.textContent.trim()) || 0; // Convierte a número
+                            mostrarMensaje("Compra realizada con éxito. Total: " + total + " $");
+                            carrito = [];
+                            actualizarCarrito();
                         }
-                    } else {
-                        let totalElement = document.getElementById("total"); // Ajusta el ID según tu HTML
-                        let total = parseFloat(totalElement.textContent.trim()) || 0; // Convierte a número
-                        mostrarMensaje("Compra realizada con éxito. Total: " + total + " $");
-                        carrito = [];
-                        actualizarCarrito();
-                    }
-                })
-                .catch(error => console.error("Error en la compra:", error));
+                    })
+                    .catch(error => console.error("Error en la compra:", error));
             } else {
                 // Si el usuario cancela, no hacer nada
                 mostrarMensaje("El pedido no ha sido tramitado.");

@@ -27,11 +27,13 @@ $isEdit = !empty($producto['id']);
     </div>
     <div class="mb-3">
         <label class="form-label">Descripción</label>
-        <textarea name="descripcion" class="form-control"><?php echo htmlspecialchars($producto['descripcion']); ?></textarea>
+        <textarea name="descripcion" class="form-control" required id="descripcion"><?php echo htmlspecialchars($producto['descripcion']); ?></textarea>
     </div>
     <div class="mb-3">
         <label class="form-label">Precio</label>
-        <input type="number" step="0.01" name="precio" class="form-control" value="<?php echo htmlspecialchars($producto['precio']); ?>" required>
+        <input type="number" step="0.01" name="precio" class="form-control" 
+            value="<?php echo htmlspecialchars($producto['precio']); ?>" 
+            min="0.01" required>
     </div>
     <div class="mb-3">
         <label class="form-label">Categoría</label>
@@ -55,13 +57,27 @@ $isEdit = !empty($producto['id']);
     </div>
     <div class="mb-3">
         <label class="form-label">Stock</label>
-        <input type="number" name="stock" class="form-control" value="<?php echo htmlspecialchars($producto['stock']); ?>" required>
+        <input type="number" name="stock" class="form-control" 
+            value="<?php echo htmlspecialchars($producto['stock']); ?>" 
+            min="1" required >
     </div>
     <div class="mb-3">
         <label class="form-label">Imagen (URL)</label>
-        <input type="text" name="imagen" class="form-control" value="<?php echo htmlspecialchars($producto['imagen']); ?>">
+        <input type="text" name="imagen" class="form-control" value="<?php echo htmlspecialchars($producto['imagen']); ?>" required oninput="validarDescripcion(this)">
     </div>
 
     <button type="submit" class="btn btn-success">Guardar</button>
     <a href="index.php?entity=Producto&action=listar" class="btn btn-secondary">Cancelar</a>
 </form>
+
+<script>
+function validarFormulario() {
+    let descripcion = document.getElementById("descripcion").value.trim();
+    
+    if (descripcion === "") {
+        return false; // Evita que el formulario se envíe
+    }
+    
+    return true; // Permite el envío si la descripción es válida
+}
+</script>

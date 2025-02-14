@@ -97,5 +97,12 @@ class ClassProducto {
             return "Error: " . $e->getMessage();
         }
     }
+
+    public function getProducto() {
+        $sql = "SELECT id, nombre, precio FROM productos";
+        $stmt = $this->conn->prepare($sql); 
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 ?>

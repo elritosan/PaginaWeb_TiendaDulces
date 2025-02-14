@@ -1,3 +1,4 @@
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <?php
 $rol = $elemento;
 if (!isset($rol) || empty($rol)) {
@@ -16,12 +17,32 @@ if (!isset($rol) || empty($rol)) {
 <div class="mt-3">
     <a href="index.php?entity=Rol&action=editar&id=<?php echo $rol['id']; ?>" class="btn btn-warning">Editar</a>
 
-    <form method="POST" action="index.php" style="display:inline;">
+    <form method="POST" action="index.php" style="display:inline;" id="deleteForm<?php echo $rol['id']; ?>">
         <input type="hidden" name="entity" value="Rol">
         <input type="hidden" name="action" value="eliminar">
         <input type="hidden" name="id" value="<?php echo htmlspecialchars($rol['id']); ?>">
-        <button type="submit" class="btn btn-danger">Eliminar</button>
+        <button type="button" class="btn btn-danger" onclick="confirmarEliminacion(<?php echo $rol['id']; ?>)">Eliminar</button>
     </form>
 
     <a href="index.php?entity=Rol&action=listar" class="btn btn-secondary">Volver</a>
 </div>
+
+<script>
+function confirmarEliminacion(id) {
+    Swal.fire({
+        title: "¿Estás seguro?",
+        text: "Esta acción no se puede deshacer.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById("deleteForm" + id).submit();
+        }
+    });
+}
+
+</script>

@@ -1,4 +1,10 @@
 <?php
+require_once BASE_PATH . DIRECTORY_SEPARATOR . 'Model' . DIRECTORY_SEPARATOR . 'ClassUsuario.php';
+
+$usuarioModel = new ClassUsuario();
+$usuarios = $usuarioModel->getUsuario();
+
+
 $pedido = $elemento ?? null;
 $pedido = $pedido ?? ['id' => '', 'id_usuario' => '', 'total' => '', 'estado' => 'pendiente'];
 $isEdit = !empty($pedido['id']);
@@ -11,14 +17,21 @@ $isEdit = !empty($pedido['id']);
     <?php if ($isEdit): ?>
         <input type="hidden" name="id" value="<?php echo htmlspecialchars($pedido['id']); ?>">
     <?php endif; ?>
-
     <div class="mb-3">
         <label class="form-label">Usuario</label>
-        <input type="text" name="id_usuario" class="form-control" value="<?php echo htmlspecialchars($pedido['id_usuario']); ?>" required>
+        <select name="id_usuario" class="form-control" required>
+            <?php foreach ($usuarios as $usuario): ?>
+                <option value="<?php echo $usuario['id']; ?>" <?php echo $pedido['id_usuario'] == $usuario['id'] ? 'selected' : ''; ?>>
+                    <?php echo htmlspecialchars($usuario['nombre']); ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
     </div>
     <div class="mb-3">
         <label class="form-label">Total</label>
-        <input type="number" step="0.01" name="total" class="form-control" value="<?php echo htmlspecialchars($pedido['total']); ?>" required>
+        <input type="number" step="0.01" name="total" class="form-control" 
+            value="<?php echo htmlspecialchars($pedido['total']); ?>" 
+            min="0.01" required>
     </div>
     <div class="mb-3">
         <label class="form-label">Estado</label>

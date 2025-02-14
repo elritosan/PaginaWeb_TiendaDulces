@@ -32,22 +32,54 @@ $isEdit = !empty($usuario['id']);
     </div>
     <div class="mb-3">
         <label class="form-label">Dirección</label>
-        <input type="text" name="direccion" class="form-control" value="<?php echo htmlspecialchars($usuario['direccion']); ?>">
+        <input type="text" name="direccion" class="form-control" 
+            value="<?php echo htmlspecialchars($usuario['direccion']); ?>" 
+            required>
     </div>
+
     <div class="mb-3">
         <label class="form-label">Teléfono</label>
-        <input type="text" name="telefono" class="form-control" value="<?php echo htmlspecialchars($usuario['telefono']); ?>">
+        <input type="text" name="telefono" class="form-control" 
+            value="<?php echo htmlspecialchars($usuario['telefono']); ?>" 
+            maxlength="10" 
+            pattern="[0-9]{10}" 
+            title="Debe contener exactamente 10 dígitos" 
+            oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10)"
+            required>
     </div>
     <div class="mb-3">
         <label class="form-label">Rol</label>
-        <select name="id_rol" class="form-control">
-            <?php foreach ($roles as $rol): ?>
-                <option value="<?php echo $rol['id']; ?>" <?php echo $usuario['id_rol'] == $rol['id'] ? 'selected' : ''; ?>>
-                    <?php echo htmlspecialchars($rol['nombrerol']); ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
+        <?php 
+            $nombreRol = "";
+            $idRolUsuarioEditado = $usuario['id_rol'] ?? ''; // El rol del usuario que se está editando
+
+            // Obtener el nombre del rol actual del usuario editado
+            foreach ($roles as $rol) {
+                if ($rol['id'] == $idRolUsuarioEditado) {
+                    $nombreRol = htmlspecialchars($rol['nombrerol']);
+                    break;
+                }
+            }
+
+            $usuarioSesion = $_SESSION['usuario'] ?? null; // Usuario logueado
+            $rolUsuarioSesion = $usuarioSesion['id_rol'] ?? ''; // Rol del usuario logueado
+
+            if ($rolUsuarioSesion == 2): // Si el usuario logueado es Cliente, solo mostrar sin editar
+        ?>
+            <input type="text" class="form-control" value="<?php echo $nombreRol ?: 'Cliente'; ?>" readonly>
+            <input type="hidden" name="id_rol" value="<?php echo $idRolUsuarioEditado; ?>">
+        <?php else: // Si el usuario logueado es administrador, permitir edición ?>
+            <select name="id_rol" class="form-control">
+                <?php foreach ($roles as $rol): ?>
+                    <option value="<?php echo $rol['id']; ?>" <?php echo ($idRolUsuarioEditado == $rol['id']) ? 'selected' : ''; ?>>
+                        <?php echo htmlspecialchars($rol['nombrerol']); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        <?php endif; ?>
     </div>
+
+
     <button type="submit" class="btn btn-success">Guardar</button>
     <a href="index.php?entity=Usuario&action=listar" class="btn btn-secondary">Cancelar</a>
 </form>

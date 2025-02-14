@@ -48,12 +48,28 @@ class ClassUsuarioController {
     public function deleteUsuarioController() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
             $id = $_POST['id'];
-            
+    
+            // Eliminar el usuario usando el modelo
             $usuarioModel = new ClassUsuario();
             $usuarioModel->deleteUsuario($id);
-            echo "<script>window.location.href = 'index.php?entity=Usuario&action=listar';</script>";
+            $usuario = $_SESSION['usuario'] ?? null; // Recuperamos el usuario de la sesión
+            $usuarioRol = $usuario['id_rol'] ?? 'guest';
+
+            if ($usuarioRol == '2'){
+                // Cerrar sesión
+                session_start();
+                session_unset();  // Elimina todas las variables de sesión
+                session_destroy(); // Destruye la sesión
+                
+                // Redirigir al inicio (puedes modificar la URL según tu página de inicio)
+                echo "<script>window.location.href = 'index.php';</script>";  // Redirige a la página principal
+            }
+            
+            // Redirigir al inicio (puedes modificar la URL según tu página de inicio)
+            echo "<script>window.location.href = 'index.php?entity=Usuario&action=listar';</script>"; 
         }
     }
+    
     
     public function listarUsuariosController($busqueda = '') {
         // Instanciamos el modelo de usuario correctamente
